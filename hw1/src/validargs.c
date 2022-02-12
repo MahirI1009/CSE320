@@ -21,6 +21,105 @@
  */
 
 int validargs(int argc, char **argv) {
-    // TO BE IMPLEMENTED
+    /*
+    The input "bin/argo -h" is an array of strings of size 2. "bin/argo" and "-h" are the 2 elements of thr array.
+    argc is the number of arguments passed, which is basically the size of the input array. 
+    argv is the array itself, given the nature of variables in C, argv points to the first variable of the array. argv = argv[0].
+    */
+
+    if (argc < 2 || argc > 4) {
+        global_options=0x0;
+        return -1;
+    }
+
+    if (argc == 2) {                                // If argc = 2, then the possible valid input strings are "bin/argo -h" and "bin/argo -v"
+        if (*(*(argv+1)) == '-') {                  //Go to argv[1][0] which should '-'     
+            if (*(*(argv+1)+1) == 'h') {            //Go to argv[1] which can be 'h' or 'v', check for 'h' or 'v'
+                if (*(*(argv+1)+2) == '\0') {
+                    global_options=HELP_OPTION;
+                    return 0;
+                } else {
+                    global_options=0x0;
+                    return -1;
+                }
+            } else if (*(*(argv+1)+1) == 'v') {
+                if (*(*(argv+1)+2) == '\0') {
+                    global_options=VALIDATE_OPTION;
+                    return 0;
+                } else {
+                    global_options=0x0;
+                    return -1;
+                }
+            } else if (*(*(argv+1)+1) == 'c') {
+                if (*(*(argv+1)+2) == '\0') {
+                    global_options=CANONICALIZE_OPTION;
+                    return 0;
+                } else {
+                    global_options=0x0;
+                    return -1;
+                }
+            } else {
+                global_options=0x0;
+                return -1;
+            }
+        }
+    }
+
+    if (argc == 3) {                                
+        if (*(*(argv+1)) == '-') {                  
+            if (*(*(argv+1)+1) == 'c') {            
+                if (*(*(argv+1)+2) == '\0') {
+                    if (*(*(argv+2)) == '-') {                    
+                        if (*(*(argv+2)+1) == 'p') {
+                            if (*(*(argv+2)+2) == '\0') {
+                                global_options=CANONICALIZE_OPTION + PRETTY_PRINT_OPTION;
+                                return 0;
+                            }
+                        }
+                    }
+                } else {
+                    global_options=0x0;
+                    return -1;
+                }
+            } else {
+                global_options=0x0;
+                return -1;
+            }
+        }
+    }
+
+     if (argc == 4) {                                
+        if (*(*(argv+1)) == '-') {                  
+            if (*(*(argv+1)+1) == 'c') {            
+                if (*(*(argv+1)+2) == '\0') {
+                    if (*(*(argv+2)) == '-') {                  
+                        if (*(*(argv+2)+1) == 'p') {
+                            if (*(*(argv+2)+2) == '\0') {
+                                if (*(*(argv+3)) > 0) { 
+                                    int indent = *(*(argv+3)) -'0';
+                                    for (int i = 1; *(*(argv+3)+i) != '\0'; i++) {
+                                        indent *= 10;
+                                        indent += (*(*(argv+3)+i) -'0');
+                                    }
+                                    global_options=CANONICALIZE_OPTION + PRETTY_PRINT_OPTION + indent;
+                                    return 0; 
+                                } else {
+                                    global_options=0x0;
+                                    return -1;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    global_options=0x0;
+                    return -1;
+                }
+            } else {
+                global_options=0x0;
+                return -1;
+            }
+        }
+    }
+
     abort();
 }
