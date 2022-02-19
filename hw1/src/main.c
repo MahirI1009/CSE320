@@ -23,7 +23,10 @@ int main(int argc, char **argv)
         USAGE(*argv, EXIT_FAILURE);
     if(global_options == HELP_OPTION)
         USAGE(*argv, EXIT_SUCCESS);
-    // TO BE IMPLEMENTED
+    if(global_options == VALIDATE_OPTION)
+        argo_read_value(stdin);
+    if(global_options >= CANONICALIZE_OPTION)
+        argo_write_value(argo_read_value(stdin), stdout);
     return EXIT_FAILURE;
 }
 

@@ -72,7 +72,7 @@ int validargs(int argc, char **argv) {
                     if (*(*(argv+2)) == '-') {                    
                         if (*(*(argv+2)+1) == 'p') {
                             if (*(*(argv+2)+2) == '\0') {
-                                global_options=CANONICALIZE_OPTION + PRETTY_PRINT_OPTION;
+                                global_options=CANONICALIZE_OPTION + PRETTY_PRINT_OPTION + 4;
                                 return 0;
                             }
                         }
@@ -88,7 +88,7 @@ int validargs(int argc, char **argv) {
         }
     }
 
-     if (argc == 4) {                                
+    if (argc == 4) {                                
         if (*(*(argv+1)) == '-') {                  
             if (*(*(argv+1)+1) == 'c') {            
                 if (*(*(argv+1)+2) == '\0') {
@@ -121,5 +121,5 @@ int validargs(int argc, char **argv) {
         }
     }
 
-    abort();
+    return 0;
 }
