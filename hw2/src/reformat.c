@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdio.h>
 
 #undef NULL
 #define NULL ((void *) 0)
@@ -192,7 +193,7 @@ char **reformat(const char * const *inlines, int width,
     for (end = *line;  *end;  ++end);
     if (end - *line < affix) {
       sprintf(errmsg,
-              "Line %d shorter than <prefix> + <suffix> = %d + %d = %d\n",
+              "Line %ld shorter than <prefix> + <suffix> = %d + %d = %d\n",
               line - inlines + 1, prefix, suffix, affix);
       goto rfcleanup;
     }
