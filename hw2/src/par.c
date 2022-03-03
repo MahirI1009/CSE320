@@ -123,13 +123,13 @@ badopt:
 }
 
 
-static char **readlines(void)
+static char **readlines(void) {
 
 /* Reads lines from stdin until EOF, or until a blank line is encountered, */
 /* in which case the newline is pushed back onto the input stream. Returns */
 /* a NULL-terminated array of pointers to individual lines, stripped of    */
 /* their newline characters. Uses errmsg, and returns NULL on failure.     */
-{
+
   struct buffer *cbuf = NULL, *pbuf = NULL;
   int c, blank;
   char ch, *ln, *nullline = NULL, nullchar = '\0', **lines = NULL;
@@ -181,12 +181,14 @@ rlcleanup:
 
   if (cbuf) freebuffer(cbuf);
   if (pbuf) {
-    if (!lines)
+    if (!lines) {
       for (;;) {
         lines = nextitem(pbuf);
         if (!lines) break;
         free(*lines);
       }
+    }
+      freebuffer(pbuf);
   }
 
   return lines;
@@ -231,7 +233,7 @@ static void setdefaults(
       start = *inlines;
       for (end = start;  *end;  ++end);
       for (line = inlines + 1;  *line;  ++line) {
-        for (p2 = *line;  *p2;  ++p2)
+        for (p2 = *line;  *p2;  ++p2);
         for (p1 = end;
              p1 > start && p2 > *line && p1[-1] == p2[-1];
              --p1, --p2);
@@ -248,10 +250,10 @@ static void freelines(char **lines)
 /* Frees the strings pointed to in the NULL-terminated array lines, then */
 /* frees the array. Does not use errmsg because it always succeeds.      */
 {
-  char *line;
+  char **line;
 
-  for (line = *lines;  *line;  ++line)
-    free(line);
+  for (line = lines;  *line;  ++line)
+    free(*line);
 
   free(lines);
 }
@@ -296,6 +298,7 @@ int original_main(int argc, const char * const *argv)
       if (c != '\n') break;
       putchar(c);
     }
+    if (c == EOF) break;
     ungetc(c,stdin);
 
     inlines = readlines();
