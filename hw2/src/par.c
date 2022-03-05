@@ -16,6 +16,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <getopt.h>
 
 #undef NULL
 #define NULL ((void *) 0)
@@ -69,59 +70,80 @@ static int strtoudec(const char *s, int *pn)
   return 1;
 }
 
+static void parse_opt_2(int *pwidth, int *pprefix, int *psuffix, int *phang, int *plast, int *pmin, int argc, char * const *argv) {
 
-static void parseopt(
-  const char *opt, int *pwidth, int *pprefix,
-  int *psuffix, int *phang, int *plast, int *pmin
-)
-/* Parses the single option in opt, setting *pwidth, *pprefix,     */
-/* *psuffix, *phang, *plast, or *pmin as appropriate. Uses errmsg. */
-{
-  const char *saveopt = opt;
-  char oc;
-  int n, r;
+  const char* options = "w:p:s:h::l::m::";
 
-  if (*opt == '-') ++opt;
+  static struct option long_options[] = {
+    {"version", no_argument, 0, 'v'},
+    {"width", required_argument, 0, 'w'},
+    {"prefix", required_argument, 0, 'p'},
+    {"suffix", required_argument, 0, 's'},
+    {"hang", optional_argument, 0, 'h'},
+    {"last", no_argument, 0, 'L'},
+    {"no-last", no_argument, 0, 'k'},
+    {"min", no_argument, 0, 'M'},
+    {"no-min", no_argument, 0, 'n'},
+    {0,0,0,0}
+  };
 
-  if (!strcmp(opt, "version")) {
-    sprintf(errmsg, "%s %s\n", progname, version);
-    return;
+  int dummy = 0;
+  int option = getopt_long(argc, argv, options, long_options, NULL);
+  while (option != -1) {
+      switch(option) {
+        case 'v':
+          sprintf("%s %s\n", progname, version);
+          exit(EXIT_SUCCESS);
+
+        case 'w':
+          if(strtoudec(optarg, &dummy) == 0) {set_error("Bad option: %.149s\n");}
+          else *pwidth = dummy;
+          break;
+
+        case 'p':
+          if(strtoudec(optarg, &dummy) == 0) {set_error("Bad option: %.149s\n");}
+          else *pprefix = dummy;
+          break;
+        
+        case 's':
+          if(strtoudec(optarg, &dummy) == 0) {set_error("Bad option: %.149s\n");}
+          else *psuffix = dummy;
+          break;
+
+        case 'h':
+          if(strtoudec(optarg, &dummy) == 0) {set_error("Bad option: %.149s\n");}
+          else *phang = dummy;
+          break;
+
+        case 'l':
+          if(strtoudec(optarg, &dummy) == 0) {set_error("Bad option: %.149s\n");}
+          else *plast = dummy;
+          break;
+
+
+        case 'L':
+          *plast = 1;
+          break;
+
+        case 'k':
+          *plast = 0;
+          break;
+
+        case 'm':
+          if(strtoudec(optarg, &dummy) == 0) {set_error("Bad option: %.149s\n");}
+          else *pmin = dummy;
+          break;
+
+        case 'M':
+          *pmin = 1;
+          break;
+
+        case 'n':
+          *pmin = 0;
+          break;
+      }
   }
-
-  oc = *opt;
-
-  if (isdigit(oc)) {
-    if (!strtoudec(opt, &n)) goto badopt;
-    if (n <= 8) *pprefix = n;
-    else *pwidth = n;
-  }
-  else {
-    if (!oc) goto badopt;
-    n = 1;
-    r = strtoudec(opt + 1, &n);
-    if (opt[1] && !r) goto badopt;
-
-    if (oc == 'w' || oc == 'p' || oc == 's') {
-      if (!r) goto badopt;
-      if      (oc == 'w') *pwidth  = n;
-      else if (oc == 'p') *pprefix = n;
-      else                *psuffix = n;
-    }
-    else if (oc == 'h') *phang = n;
-    else if (n <= 1) {
-      if      (oc == 'l') *plast = n;
-      else if (oc == 'm') *pmin = n;
-    }
-    else goto badopt;
-  }
-
-  *errmsg = '\0';
-  return;
-
-badopt:
-  sprintf(errmsg, "Bad option: %.149s\n", saveopt);
 }
-
 
 static char **readlines(void) {
 
@@ -135,9 +157,9 @@ static char **readlines(void) {
   char ch, *ln, *nullline = NULL, nullchar = '\0', **lines = NULL;
 
   cbuf = newbuffer(sizeof (char));
-  if (*errmsg) goto rlcleanup;
+  if (is_error()) goto rlcleanup;
   pbuf = newbuffer(sizeof (char *));
-  if (*errmsg) goto rlcleanup;
+  if (is_error()) goto rlcleanup;
 
   for (blank = 1;  ; ) {
     c = getchar();
@@ -148,11 +170,11 @@ static char **readlines(void) {
         break;
       }
       additem(cbuf, &nullchar);
-      if (*errmsg) goto rlcleanup;
+      if(is_error()) goto rlcleanup;
       ln = copyitems(cbuf);
-      if (*errmsg) goto rlcleanup;
+      if(is_error()) goto rlcleanup;
       additem(pbuf, &ln);
-      if (*errmsg) goto rlcleanup;
+      if(is_error()) goto rlcleanup;
       clearbuffer(cbuf);
       blank = 1;
     }
@@ -160,21 +182,21 @@ static char **readlines(void) {
       if (!isspace(c)) blank = 0;
       ch = c;
       additem(cbuf, &ch);
-      if (*errmsg) goto rlcleanup;
+      if (is_error()) goto rlcleanup;
     }
   }
 
   if (!blank) {
     additem(cbuf, &nullchar);
-    if (*errmsg) goto rlcleanup;
+    if(is_error()) goto rlcleanup;
     ln = copyitems(cbuf);
-    if (*errmsg) goto rlcleanup;
+    if(is_error()) goto rlcleanup;
     additem(pbuf, &ln);
-    if (*errmsg) goto rlcleanup;
+    if(is_error()) goto rlcleanup;
   }
 
   additem(pbuf, &nullline);
-  if (*errmsg) goto rlcleanup;
+  if(is_error()) goto rlcleanup;
   lines = copyitems(pbuf);
 
 rlcleanup:
@@ -195,14 +217,10 @@ rlcleanup:
 }
 
 
-static void setdefaults(
-  const char * const *inlines, int *pwidth, int *pprefix,
-  int *psuffix, int *phang, int *plast, int *pmin
-)
-/* If any of *pwidth, *pprefix, *psuffix, *phang, *plast, *pmin are     */
+static void setdefaults(const char * const *inlines, int *pwidth, int *pprefix, int *psuffix, int *phang, int *plast, int *pmin) {
+ /* If any of *pwidth, *pprefix, *psuffix, *phang, *plast, *pmin are     */
 /* less than 0, sets them to default values based on inlines, according */
 /* to "par.doc". Does not use errmsg because it always succeeds.        */
-{
   int numlines;
   const char *start, *end, * const *line, *p1, *p2;
 
@@ -259,27 +277,23 @@ static void freelines(char **lines)
 }
 
 
-int original_main(int argc, const char * const *argv)
-{
-  int width, widthbak = -1, prefix, prefixbak = -1, suffix, suffixbak = -1,
-      hang, hangbak = -1, last, lastbak = -1, min, minbak = -1, c;
-  char *parinit, *picopy = NULL, *opt, **inlines = NULL, **outlines = NULL,
-       **line;
+int original_main(int argc, char * const *argv) {
+  int width, widthbak = -1, prefix, prefixbak = -1, suffix, suffixbak = -1, hang, hangbak = -1, last, lastbak = -1, min, minbak = -1, c;
+  char *parinit, *picopy = NULL, *opt, **inlines = NULL, **outlines = NULL, **line;
   const char * const whitechars = " \f\n\r\t\v";
 
   parinit = getenv("PARINIT");
   if (parinit) {
     picopy = malloc((strlen(parinit) + 1) * sizeof (char));
     if (!picopy) {
-      strcpy(errmsg,outofmem);
+      strcpy(err_msg,outofmem);
       goto parcleanup;
     }
     strcpy(picopy,parinit);
     opt = strtok(picopy,whitechars);
     while (opt) {
-      parseopt(opt, &widthbak, &prefixbak,
-               &suffixbak, &hangbak, &lastbak, &minbak);
-      if (*errmsg) goto parcleanup;
+      parse_opt_2(&widthbak, &prefixbak, &suffixbak, &hangbak, &lastbak, &minbak, argc, argv);
+      if(is_error()) goto parcleanup;
       opt = strtok(NULL,whitechars);
     }
     free(picopy);
@@ -287,9 +301,8 @@ int original_main(int argc, const char * const *argv)
   }
 
   while (*++argv) {
-    parseopt(*argv, &widthbak, &prefixbak,
-             &suffixbak, &hangbak, &lastbak, &minbak);
-    if (*errmsg) goto parcleanup;
+    parse_opt_2(&widthbak, &prefixbak, &suffixbak, &hangbak, &lastbak, &minbak, argc, argv);
+    if(is_error()) goto parcleanup;
   }
 
   for (;;) {
@@ -302,7 +315,7 @@ int original_main(int argc, const char * const *argv)
     ungetc(c,stdin);
 
     inlines = readlines();
-    if (*errmsg) goto parcleanup;
+    if(is_error()) goto parcleanup;
     if (!*inlines) {
       free(inlines);
       inlines = NULL;
@@ -311,12 +324,10 @@ int original_main(int argc, const char * const *argv)
 
     width = widthbak;  prefix = prefixbak;  suffix = suffixbak;
     hang = hangbak;  last = lastbak;  min = minbak;
-    setdefaults((const char * const *) inlines,
-                &width, &prefix, &suffix, &hang, &last, &min);
+    setdefaults((const char * const *) inlines, &width, &prefix, &suffix, &hang, &last, &min);
 
-    outlines = reformat((const char * const *) inlines,
-                        width, prefix, suffix, hang, last, min);
-    if (*errmsg) goto parcleanup;
+    outlines = reformat((const char * const *) inlines, width, prefix, suffix, hang, last, min);
+    if(is_error()) goto parcleanup;
 
     freelines(inlines);
     inlines = NULL;
@@ -334,8 +345,8 @@ parcleanup:
   if (inlines) freelines(inlines);
   if (outlines) freelines(outlines);
 
-  if (*errmsg) {
-    fprintf(stderr, "%.163s", errmsg);
+  if(is_error()) {
+    fprintf(stderr, "%.163s", err_msg);
     exit(EXIT_FAILURE);
   }
 
