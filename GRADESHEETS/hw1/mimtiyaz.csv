@@ -1,0 +1,66 @@
+Graded Commit:c0970f8f5216851d916c6881d326bd0787920d40
+
+TEST NAME, POINTS,OUT OF
+argo_read_number_suite/capital_exponent_symbol,0,1,The test crashed.: None
+argo_read_number_suite/float_exact_one,0,1,The test crashed.: None
+argo_read_number_suite/float_exact_zero,0,1,The test crashed.: None
+argo_read_number_suite/invalid_input_1,0,1,The test crashed.: None
+argo_read_number_suite/invalid_input_2,0,1,The test crashed.: None
+argo_read_number_suite/invalid_input_3,0,1,The test crashed.: None
+argo_read_number_suite/negative_exponent_negative_number,0,1,The test crashed.: None
+argo_read_number_suite/negative_int,0,1,The test crashed.: None
+argo_read_number_suite/plus_sign,0,1,The test crashed.: None
+argo_read_number_suite/small_exponent_symbol,0,1,The test crashed.: None
+argo_read_number_suite/valid_float,0,1,The test crashed.: None
+argo_read_number_suite/valid_int,0,1,The test crashed.: None
+argo_read_number_suite/valid_string,0,1,The test crashed.: None
+argo_read_string_suite/control_character_check,0,1,The test crashed.: None
+argo_read_string_suite/simple_valid_string,0,1,The test crashed.: None
+argo_read_string_suite/valid_escape_hex_sequence,0,1,The test crashed.: None
+argo_read_string_suite/valid_escape_sequence,0,1,The test crashed.: None
+argo_read_string_suite/valid_string,0,1,The test crashed.: None
+argo_read_string_suite/wrong_escape_hex_sequence,0,1,The test crashed.: None
+argo_read_string_suite/wrong_escape_sequence,0,1,The test crashed.: None
+argo_read_value_suite/array_empty_list,0,1,The test crashed.: None
+argo_read_value_suite/array_storage_usage,0,1,The test crashed.: None
+argo_read_value_suite/nested_argo_value,0,1,The test crashed.: None
+argo_read_value_suite/object_empty_member,0,1,The test crashed.: None
+argo_read_value_suite/simple_array_type,0,1,The test crashed.: None
+argo_read_value_suite/simple_basic_type,0,1,The test crashed.: None
+argo_read_value_suite/simple_number_type,0,1,The test crashed.: None
+argo_read_value_suite/simple_object_type,0,1,The test crashed.: None
+argo_read_value_suite/simple_string_type,0,1,The test crashed.: None
+argo_write_number_suite/exceed_max_digits,1,1,
+argo_write_number_suite/valid_float,0,1,1 assertion(s) failed.: tests/argo_utils.h:77: Invalid return for argo_write_number. Got: -1 | Expected: 0
+argo_write_number_suite/valid_int,0,1,1 assertion(s) failed.: tests/argo_utils.h:77: Invalid return for argo_write_number. Got: -1 | Expected: 0
+argo_write_string_suite/mixed_escape_sequence,0,1,1 assertion(s) failed.: tests/argo_utils.h:113: Invalid string content.
+argo_write_string_suite/simple_escape_sequence,0,1,1 assertion(s) failed.: tests/argo_utils.h:113: Invalid string content.
+argo_write_string_suite/simple_string,1,1,
+argo_write_value_suite/nested_canonical,0,1,1 assertion(s) failed.: tests/argo_utils.h:113: Invalid string content.
+argo_write_value_suite/nested_pretty_print,0,1,1 assertion(s) failed.: tests/argo_utils.h:113: Invalid string content.
+argo_write_value_suite/output_to_dev_full,0,1,1 assertion(s) failed.: tests/argo_utils.h:77: Invalid return for argo_write_value. Got: 0 | Expected: -1
+argo_write_value_suite/randomized_storage_indices,0,1,1 assertion(s) failed.: tests/argo_utils.h:113: Invalid string content.
+argo_write_value_suite/simple_array_type,1,1,
+argo_write_value_suite/simple_basic_type,1,1,
+argo_write_value_suite/simple_number_type,0,1,1 assertion(s) failed.: tests/argo_utils.h:105: Invalid value in string_value. Expected: 3948
+argo_write_value_suite/simple_object_type,0,1,1 assertion(s) failed.: tests/argo_utils.h:113: Invalid string content.
+argo_write_value_suite/simple_string_type,1,1,
+basecode_suite/argo_basic_test,0,1,1 assertion(s) failed.: tests/argo_utils.h:147: Program exited with 0x86 instead of EXIT_SUCCESS
+basecode_suite/help_system_test,1,1,
+basecode_suite/validargs_canonicalize_test,1,1,
+basecode_suite/validargs_error_test,1,1,
+basecode_suite/validargs_help_test,1,1,
+basecode_suite/validargs_pretty_print_test,1,1,
+basecode_suite/validargs_validate_test,1,1,
+blackbox_suite/average_json_test,0,1,1 assertion(s) failed.: tests/argo_utils.h:147: Program exited with 0x86 instead of EXIT_SUCCESS
+blackbox_suite/different_spaces_test,0,1,1 assertion(s) failed.: tests/argo_utils.h:147: Program exited with 0x86 instead of EXIT_SUCCESS
+blackbox_suite/long_json_test,0,1,1 assertion(s) failed.: tests/argo_utils.h:147: Program exited with 0x86 instead of EXIT_SUCCESS
+blackbox_suite/non_ascii_test,0,1,1 assertion(s) failed.: tests/argo_utils.h:147: Program exited with 0x86 instead of EXIT_SUCCESS
+blackbox_suite/simple_json_test,0,1,1 assertion(s) failed.: tests/argo_utils.h:147: Program exited with 0x86 instead of EXIT_SUCCESS
+validargs_suite/help_first_positional_arg_test,1,1,
+validargs_suite/ignore_args_after_help_test,0,1,1 assertion(s) failed.: tests/argo_utils.h:58: Invalid return for validargs. Got: -1 | Expected: 0
+validargs_suite/negative_indent_test,0,1,1 assertion(s) failed.: tests/argo_utils.h:58: Invalid return for validargs. Got: 0 | Expected: -1
+validargs_suite/no_args_test,1,1,
+validargs_suite/no_dash_test,0,1,1 assertion(s) failed.: tests/argo_utils.h:58: Invalid return for validargs. Got: 0 | Expected: -1
+validargs_suite/optional_before_positional_test,1,1,
+total,14,62

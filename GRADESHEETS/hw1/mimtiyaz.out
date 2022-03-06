@@ -1,0 +1,190 @@
+[----] Criterion v2.3.3
+[====] Running 13 tests from argo_read_number_suite:
+[RUN ] argo_read_number_suite::capital_exponent_symbol
+[----] tests/argo_number_tests.c:121: Unexpected signal caught below this line!
+[FAIL] argo_read_number_suite::capital_exponent_symbol: CRASH!
+[RUN ] argo_read_number_suite::float_exact_one
+[----] tests/argo_number_tests.c:87: Unexpected signal caught below this line!
+[FAIL] argo_read_number_suite::float_exact_one: CRASH!
+[RUN ] argo_read_number_suite::float_exact_zero
+[----] tests/argo_number_tests.c:70: Unexpected signal caught below this line!
+[FAIL] argo_read_number_suite::float_exact_zero: CRASH!
+[RUN ] argo_read_number_suite::invalid_input_1
+[----] tests/argo_number_tests.c:172: Unexpected signal caught below this line!
+[FAIL] argo_read_number_suite::invalid_input_1: CRASH!
+[RUN ] argo_read_number_suite::invalid_input_2
+[----] tests/argo_number_tests.c:186: Unexpected signal caught below this line!
+[FAIL] argo_read_number_suite::invalid_input_2: CRASH!
+[RUN ] argo_read_number_suite::invalid_input_3
+[----] tests/argo_number_tests.c:203: Unexpected signal caught below this line!
+[FAIL] argo_read_number_suite::invalid_input_3: CRASH!
+[RUN ] argo_read_number_suite::negative_exponent_negative_number
+[----] tests/argo_number_tests.c:138: Unexpected signal caught below this line!
+[FAIL] argo_read_number_suite::negative_exponent_negative_number: CRASH!
+[RUN ] argo_read_number_suite::negative_int
+[----] tests/argo_number_tests.c:22: Unexpected signal caught below this line!
+[FAIL] argo_read_number_suite::negative_int: CRASH!
+[RUN ] argo_read_number_suite::plus_sign
+[----] tests/argo_number_tests.c:39: Unexpected signal caught below this line!
+[FAIL] argo_read_number_suite::plus_sign: CRASH!
+[RUN ] argo_read_number_suite::small_exponent_symbol
+[----] tests/argo_number_tests.c:104: Unexpected signal caught below this line!
+[FAIL] argo_read_number_suite::small_exponent_symbol: CRASH!
+[RUN ] argo_read_number_suite::valid_float
+[----] tests/argo_number_tests.c:53: Unexpected signal caught below this line!
+[FAIL] argo_read_number_suite::valid_float: CRASH!
+[RUN ] argo_read_number_suite::valid_int
+[----] tests/argo_number_tests.c:5: Unexpected signal caught below this line!
+[FAIL] argo_read_number_suite::valid_int: CRASH!
+[RUN ] argo_read_number_suite::valid_string
+[----] tests/argo_number_tests.c:155: Unexpected signal caught below this line!
+[FAIL] argo_read_number_suite::valid_string: CRASH!
+[====] Running 7 tests from argo_read_string_suite:
+[RUN ] argo_read_string_suite::control_character_check
+[----] tests/argo_string_tests.c:41: Unexpected signal caught below this line!
+[FAIL] argo_read_string_suite::control_character_check: CRASH!
+[RUN ] argo_read_string_suite::simple_valid_string
+[----] tests/argo_string_tests.c:23: Unexpected signal caught below this line!
+[FAIL] argo_read_string_suite::simple_valid_string: CRASH!
+[RUN ] argo_read_string_suite::valid_escape_hex_sequence
+[----] tests/argo_string_tests.c:71: Unexpected signal caught below this line!
+[FAIL] argo_read_string_suite::valid_escape_hex_sequence: CRASH!
+[RUN ] argo_read_string_suite::valid_escape_sequence
+[----] tests/argo_string_tests.c:53: Unexpected signal caught below this line!
+[FAIL] argo_read_string_suite::valid_escape_sequence: CRASH!
+[RUN ] argo_read_string_suite::valid_string
+[----] tests/argo_string_tests.c:5: Unexpected signal caught below this line!
+[FAIL] argo_read_string_suite::valid_string: CRASH!
+[RUN ] argo_read_string_suite::wrong_escape_hex_sequence
+[----] tests/argo_string_tests.c:101: Unexpected signal caught below this line!
+[FAIL] argo_read_string_suite::wrong_escape_hex_sequence: CRASH!
+[RUN ] argo_read_string_suite::wrong_escape_sequence
+[----] tests/argo_string_tests.c:89: Unexpected signal caught below this line!
+[FAIL] argo_read_string_suite::wrong_escape_sequence: CRASH!
+[====] Running 9 tests from argo_read_value_suite:
+[RUN ] argo_read_value_suite::array_empty_list
+[----] tests/argo_value_tests.c:115: Unexpected signal caught below this line!
+[FAIL] argo_read_value_suite::array_empty_list: CRASH!
+[RUN ] argo_read_value_suite::array_storage_usage
+[----] tests/argo_value_tests.c:173: Unexpected signal caught below this line!
+[FAIL] argo_read_value_suite::array_storage_usage: CRASH!
+[RUN ] argo_read_value_suite::nested_argo_value
+[----] tests/argo_value_tests.c:132: Unexpected signal caught below this line!
+[FAIL] argo_read_value_suite::nested_argo_value: CRASH!
+[RUN ] argo_read_value_suite::object_empty_member
+[----] tests/argo_value_tests.c:99: Unexpected signal caught below this line!
+[FAIL] argo_read_value_suite::object_empty_member: CRASH!
+[RUN ] argo_read_value_suite::simple_array_type
+[----] tests/argo_value_tests.c:77: Unexpected signal caught below this line!
+[FAIL] argo_read_value_suite::simple_array_type: CRASH!
+[RUN ] argo_read_value_suite::simple_basic_type
+[----] tests/argo_value_tests.c:38: Unexpected signal caught below this line!
+[FAIL] argo_read_value_suite::simple_basic_type: CRASH!
+[RUN ] argo_read_value_suite::simple_number_type
+[----] tests/argo_value_tests.c:4: Unexpected signal caught below this line!
+[FAIL] argo_read_value_suite::simple_number_type: CRASH!
+[RUN ] argo_read_value_suite::simple_object_type
+[----] tests/argo_value_tests.c:56: Unexpected signal caught below this line!
+[FAIL] argo_read_value_suite::simple_object_type: CRASH!
+[RUN ] argo_read_value_suite::simple_string_type
+[----] tests/argo_value_tests.c:20: Unexpected signal caught below this line!
+[FAIL] argo_read_value_suite::simple_string_type: CRASH!
+[====] Running 3 tests from argo_write_number_suite:
+[RUN ] argo_write_number_suite::exceed_max_digits
+[PASS] argo_write_number_suite::exceed_max_digits: (0.00s)
+[RUN ] argo_write_number_suite::valid_float
+[----] tests/argo_utils.h:77: Assertion failed: Invalid return for argo_write_number. Got: -1 | Expected: 0
+[FAIL] argo_write_number_suite::valid_float: (0.00s)
+[RUN ] argo_write_number_suite::valid_int
+[----] tests/argo_utils.h:77: Assertion failed: Invalid return for argo_write_number. Got: -1 | Expected: 0
+[FAIL] argo_write_number_suite::valid_int: (0.00s)
+[====] Running 3 tests from argo_write_string_suite:
+[RUN ] argo_write_string_suite::mixed_escape_sequence
+[----] tests/argo_utils.h:113: Assertion failed: Invalid string content.
+[FAIL] argo_write_string_suite::mixed_escape_sequence: (0.00s)
+[RUN ] argo_write_string_suite::simple_escape_sequence
+[----] tests/argo_utils.h:113: Assertion failed: Invalid string content.
+[FAIL] argo_write_string_suite::simple_escape_sequence: (0.00s)
+[RUN ] argo_write_string_suite::simple_string
+[PASS] argo_write_string_suite::simple_string: (0.00s)
+[====] Running 9 tests from argo_write_value_suite:
+[RUN ] argo_write_value_suite::nested_canonical
+[----] tests/argo_utils.h:113: Assertion failed: Invalid string content.
+[FAIL] argo_write_value_suite::nested_canonical: (0.00s)
+[RUN ] argo_write_value_suite::nested_pretty_print
+[----] tests/argo_utils.h:113: Assertion failed: Invalid string content.
+[FAIL] argo_write_value_suite::nested_pretty_print: (0.00s)
+[RUN ] argo_write_value_suite::output_to_dev_full
+[----] tests/argo_utils.h:77: Assertion failed: Invalid return for argo_write_value. Got: 0 | Expected: -1
+[FAIL] argo_write_value_suite::output_to_dev_full: (0.00s)
+[RUN ] argo_write_value_suite::randomized_storage_indices
+[----] tests/argo_utils.h:113: Assertion failed: Invalid string content.
+[FAIL] argo_write_value_suite::randomized_storage_indices: (0.00s)
+[RUN ] argo_write_value_suite::simple_array_type
+[PASS] argo_write_value_suite::simple_array_type: (0.00s)
+[RUN ] argo_write_value_suite::simple_basic_type
+[PASS] argo_write_value_suite::simple_basic_type: (0.00s)
+[RUN ] argo_write_value_suite::simple_number_type
+[----] tests/argo_utils.h:105: Assertion failed: Invalid value in string_value. Expected: 3948
+[FAIL] argo_write_value_suite::simple_number_type: (0.00s)
+[RUN ] argo_write_value_suite::simple_object_type
+[----] tests/argo_utils.h:113: Assertion failed: Invalid string content.
+[FAIL] argo_write_value_suite::simple_object_type: (0.00s)
+[RUN ] argo_write_value_suite::simple_string_type
+[PASS] argo_write_value_suite::simple_string_type: (0.00s)
+[====] Running 7 tests from basecode_suite:
+[RUN ] basecode_suite::argo_basic_test
+Aborted (core dumped)
+[----] tests/argo_utils.h:147: Assertion failed: Program exited with 0x86 instead of EXIT_SUCCESS
+[FAIL] basecode_suite::argo_basic_test: (0.09s)
+[RUN ] basecode_suite::help_system_test
+[PASS] basecode_suite::help_system_test: (0.00s)
+[RUN ] basecode_suite::validargs_canonicalize_test
+[PASS] basecode_suite::validargs_canonicalize_test: (0.00s)
+[RUN ] basecode_suite::validargs_error_test
+[PASS] basecode_suite::validargs_error_test: (0.00s)
+[RUN ] basecode_suite::validargs_help_test
+[PASS] basecode_suite::validargs_help_test: (0.00s)
+[RUN ] basecode_suite::validargs_pretty_print_test
+[PASS] basecode_suite::validargs_pretty_print_test: (0.00s)
+[RUN ] basecode_suite::validargs_validate_test
+[PASS] basecode_suite::validargs_validate_test: (0.00s)
+[====] Running 5 tests from blackbox_suite:
+[RUN ] blackbox_suite::average_json_test
+Aborted (core dumped)
+[----] tests/argo_utils.h:147: Assertion failed: Program exited with 0x86 instead of EXIT_SUCCESS
+[FAIL] blackbox_suite::average_json_test: (0.09s)
+[RUN ] blackbox_suite::different_spaces_test
+Aborted (core dumped)
+[----] tests/argo_utils.h:147: Assertion failed: Program exited with 0x86 instead of EXIT_SUCCESS
+[FAIL] blackbox_suite::different_spaces_test: (0.09s)
+[RUN ] blackbox_suite::long_json_test
+Aborted (core dumped)
+[----] tests/argo_utils.h:147: Assertion failed: Program exited with 0x86 instead of EXIT_SUCCESS
+[FAIL] blackbox_suite::long_json_test: (0.08s)
+[RUN ] blackbox_suite::non_ascii_test
+Aborted (core dumped)
+[----] tests/argo_utils.h:147: Assertion failed: Program exited with 0x86 instead of EXIT_SUCCESS
+[FAIL] blackbox_suite::non_ascii_test: (0.09s)
+[RUN ] blackbox_suite::simple_json_test
+Aborted (core dumped)
+[----] tests/argo_utils.h:147: Assertion failed: Program exited with 0x86 instead of EXIT_SUCCESS
+[FAIL] blackbox_suite::simple_json_test: (0.09s)
+[====] Running 6 tests from validargs_suite:
+[RUN ] validargs_suite::help_first_positional_arg_test
+[PASS] validargs_suite::help_first_positional_arg_test: (0.00s)
+[RUN ] validargs_suite::ignore_args_after_help_test
+[----] tests/argo_utils.h:58: Assertion failed: Invalid return for validargs. Got: -1 | Expected: 0
+[FAIL] validargs_suite::ignore_args_after_help_test: (0.00s)
+[RUN ] validargs_suite::negative_indent_test
+[----] tests/argo_utils.h:58: Assertion failed: Invalid return for validargs. Got: 0 | Expected: -1
+[FAIL] validargs_suite::negative_indent_test: (0.00s)
+[RUN ] validargs_suite::no_args_test
+[PASS] validargs_suite::no_args_test: (0.00s)
+[RUN ] validargs_suite::no_dash_test
+[----] tests/argo_utils.h:58: Assertion failed: Invalid return for validargs. Got: 0 | Expected: -1
+[FAIL] validargs_suite::no_dash_test: (0.00s)
+[RUN ] validargs_suite::optional_before_positional_test
+[PASS] validargs_suite::optional_before_positional_test: (0.00s)
+[----] Writing xml report in `crit.xml`.
+[====] Synthesis: Tested: 62 | Passing: 14 | Failing: 48 | Crashing: 29 
