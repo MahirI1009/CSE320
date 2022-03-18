@@ -1,0 +1,29 @@
+Graded Commit:9b9cb98a2b67a994c56b1f682007319c56493969
+
+TEST NAME, POINTS,OUT OF
+base_suite/EOF_test,1,1,
+base_suite/basic_test,1,1,
+base_suite/prefix_suffix_test,0,1,"1 assertion(s) failed.: tests/test_common.c:60: The program did not exit with the expected status (expected 0x0, was 0x8b)."
+base_suite/valgrind_leak_test,1,1,
+base_suite/valgrind_uninitialized_test,0,1,"1 assertion(s) failed.: tests/test_common.c:60: The program did not exit with the expected status (expected 0x1, was 0x89)."
+blackbox_suite/long_hang,0,1,"1 assertion(s) failed.: tests/test_common.c:60: The program did not exit with the expected status (expected 0x0, was 0x8b)."
+blackbox_suite/long_last,0,1,"1 assertion(s) failed.: tests/test_common.c:60: The program did not exit with the expected status (expected 0x0, was 0x8b)."
+blackbox_suite/long_min,0,1,"1 assertion(s) failed.: tests/test_common.c:60: The program did not exit with the expected status (expected 0x0, was 0x8b)."
+blackbox_suite/long_suffix,0,1,"1 assertion(s) failed.: tests/test_common.c:60: The program did not exit with the expected status (expected 0x0, was 0x8b)."
+blackbox_suite/long_width,0,1,"1 assertion(s) failed.: tests/test_common.c:60: The program did not exit with the expected status (expected 0x0, was 0x8b)."
+blackbox_suite/no_last,0,1,"1 assertion(s) failed.: tests/test_common.c:60: The program did not exit with the expected status (expected 0x0, was 0x8b)."
+blackbox_suite/no_min,0,1,"1 assertion(s) failed.: tests/test_common.c:60: The program did not exit with the expected status (expected 0x0, was 0x8b)."
+blackbox_suite/partial_hang,0,1,"1 assertion(s) failed.: tests/test_common.c:60: The program did not exit with the expected status (expected 0x0, was 0x8b)."
+blackbox_suite/short_hang,0,1,"1 assertion(s) failed.: tests/test_common.c:60: The program did not exit with the expected status (expected 0x0, was 0x8b)."
+blackbox_suite/short_last,0,1,"1 assertion(s) failed.: tests/test_common.c:60: The program did not exit with the expected status (expected 0x0, was 0x8b)."
+blackbox_suite/short_min,0,1,"1 assertion(s) failed.: tests/test_common.c:60: The program did not exit with the expected status (expected 0x0, was 0x8b)."
+blackbox_suite/short_prefix,0,1,"1 assertion(s) failed.: tests/test_common.c:60: The program did not exit with the expected status (expected 0x0, was 0x8b)."
+blackbox_suite/valgrind_mixed_wps,0,1,The test timed out.: None
+blackbox_suite/valgrind_mixed_wpsh,0,1,The test timed out.: None
+error_suite/check_for_error,1,1,
+error_suite/check_for_no_error,1,1,
+error_suite/report_error,1,1,
+error_suite/report_error_clear,1,1,
+error_suite/set_error,1,1,
+error_suite/set_error_long,1,1,
+total,9,25
