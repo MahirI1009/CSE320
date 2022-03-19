@@ -3,93 +3,93 @@
 [RUN ] base_suite::EOF_test
 setup(rm -f test_output/EOF.out test_output/EOF.err; rm -fr test_output/EOF; mkdir -p test_output/EOF)
 run(ulimit -t 10; ulimit -f 2000; bin/par  < tests/rsrc/EOF.in > test_output/EOF.out 2> test_output/EOF.err)
-[PASS] base_suite::EOF_test: (0.18s)
+[PASS] base_suite::EOF_test: (0.02s)
 [RUN ] base_suite::basic_test
 setup(rm -f test_output/basic.out test_output/basic.err; rm -fr test_output/basic; mkdir -p test_output/basic)
 run(ulimit -t 10; ulimit -f 2000; bin/par  < tests/rsrc/basic.in > test_output/basic.out 2> test_output/basic.err)
-[PASS] base_suite::basic_test: (0.14s)
+[PASS] base_suite::basic_test: (0.02s)
 [RUN ] base_suite::prefix_suffix_test
 setup(rm -f test_output/prefix_suffix.out test_output/prefix_suffix.err; rm -fr test_output/prefix_suffix; mkdir -p test_output/prefix_suffix)
 run(ulimit -t 10; ulimit -f 2000; bin/par -w 80 < tests/rsrc/prefix_suffix.in > test_output/prefix_suffix.out 2> test_output/prefix_suffix.err)
 [----] tests/test_common.c:60: Assertion failed: The program did not exit with the expected status (expected 0x0, was 0x8b).
-[FAIL] base_suite::prefix_suffix_test: (0.39s)
+[FAIL] base_suite::prefix_suffix_test: (0.38s)
 [RUN ] base_suite::valgrind_leak_test
 setup(rm -f test_output/valgrind_leak.out test_output/valgrind_leak.err; rm -fr test_output/valgrind_leak; mkdir -p test_output/valgrind_leak)
 run(ulimit -t 10; ulimit -f 2000;valgrind --leak-check=full --undef-value-errors=no --error-exitcode=37 bin/par  < tests/rsrc/valgrind_leak.in > test_output/valgrind_leak.out 2> test_output/valgrind_leak.err)
-[PASS] base_suite::valgrind_leak_test: (1.04s)
+[PASS] base_suite::valgrind_leak_test: (1.01s)
 [RUN ] base_suite::valgrind_uninitialized_test
 setup(rm -f test_output/valgrind_uninitialized.out test_output/valgrind_uninitialized.err; rm -fr test_output/valgrind_uninitialized; mkdir -p test_output/valgrind_uninitialized)
 run(ulimit -t 10; ulimit -f 2000;valgrind --leak-check=no --undef-value-errors=yes --error-exitcode=37 bin/par -p 10 -s 10 < tests/rsrc/valgrind_uninitialized.in > test_output/valgrind_uninitialized.out 2> test_output/valgrind_uninitialized.err)
 [----] tests/test_common.c:60: Assertion failed: The program did not exit with the expected status (expected 0x1, was 0x89).
-[FAIL] base_suite::valgrind_uninitialized_test: (10.45s)
+[FAIL] base_suite::valgrind_uninitialized_test: (10.09s)
 [====] Running 14 tests from blackbox_suite:
 [RUN ] blackbox_suite::long_hang
 setup(rm -f test_output/long_hang.out test_output/long_hang.err; rm -fr test_output/long_hang; mkdir -p test_output/long_hang)
-run(ulimit -t 10; ulimit -f 2000; bin/par --hang 10 < tests/rsrc/simple_text_inp.in > test_output/long_hang.out 2> test_output/long_hang.err)
+run(ulimit -t 10; ulimit -f 2000; bin/par --hang=10 < tests/rsrc/simple_text_inp.in > test_output/long_hang.out 2> test_output/long_hang.err)
 [----] tests/test_common.c:60: Assertion failed: The program did not exit with the expected status (expected 0x0, was 0x8b).
-[FAIL] blackbox_suite::long_hang: (0.37s)
+[FAIL] blackbox_suite::long_hang: (0.38s)
 [RUN ] blackbox_suite::long_last
 setup(rm -f test_output/long_last.out test_output/long_last.err; rm -fr test_output/long_last; mkdir -p test_output/long_last)
 run(ulimit -t 10; ulimit -f 2000; bin/par --last < tests/rsrc/simple_text_inp.in > test_output/long_last.out 2> test_output/long_last.err)
 [----] tests/test_common.c:60: Assertion failed: The program did not exit with the expected status (expected 0x0, was 0x8b).
-[FAIL] blackbox_suite::long_last: (0.56s)
+[FAIL] blackbox_suite::long_last: (0.38s)
 [RUN ] blackbox_suite::long_min
 setup(rm -f test_output/long_min.out test_output/long_min.err; rm -fr test_output/long_min; mkdir -p test_output/long_min)
 run(ulimit -t 10; ulimit -f 2000; bin/par --min < tests/rsrc/simple_text_inp.in > test_output/long_min.out 2> test_output/long_min.err)
 [----] tests/test_common.c:60: Assertion failed: The program did not exit with the expected status (expected 0x0, was 0x8b).
-[FAIL] blackbox_suite::long_min: (0.55s)
+[FAIL] blackbox_suite::long_min: (0.38s)
 [RUN ] blackbox_suite::long_suffix
 setup(rm -f test_output/long_suffix.out test_output/long_suffix.err; rm -fr test_output/long_suffix; mkdir -p test_output/long_suffix)
 run(ulimit -t 10; ulimit -f 2000; bin/par --suffix 10 < tests/rsrc/simple_text_inp.in > test_output/long_suffix.out 2> test_output/long_suffix.err)
 [----] tests/test_common.c:60: Assertion failed: The program did not exit with the expected status (expected 0x0, was 0x8b).
-[FAIL] blackbox_suite::long_suffix: (0.54s)
+[FAIL] blackbox_suite::long_suffix: (0.38s)
 [RUN ] blackbox_suite::long_width
 setup(rm -f test_output/long_width.out test_output/long_width.err; rm -fr test_output/long_width; mkdir -p test_output/long_width)
 run(ulimit -t 10; ulimit -f 2000; bin/par --width 100 < tests/rsrc/simple_text_inp.in > test_output/long_width.out 2> test_output/long_width.err)
 [----] tests/test_common.c:60: Assertion failed: The program did not exit with the expected status (expected 0x0, was 0x8b).
-[FAIL] blackbox_suite::long_width: (0.57s)
+[FAIL] blackbox_suite::long_width: (0.38s)
 [RUN ] blackbox_suite::no_last
 setup(rm -f test_output/no_last.out test_output/no_last.err; rm -fr test_output/no_last; mkdir -p test_output/no_last)
 run(ulimit -t 10; ulimit -f 2000; bin/par --no-last < tests/rsrc/simple_text_inp.in > test_output/no_last.out 2> test_output/no_last.err)
 [----] tests/test_common.c:60: Assertion failed: The program did not exit with the expected status (expected 0x0, was 0x8b).
-[FAIL] blackbox_suite::no_last: (0.51s)
+[FAIL] blackbox_suite::no_last: (0.37s)
 [RUN ] blackbox_suite::no_min
 setup(rm -f test_output/no_min.out test_output/no_min.err; rm -fr test_output/no_min; mkdir -p test_output/no_min)
 run(ulimit -t 10; ulimit -f 2000; bin/par --no-min < tests/rsrc/simple_text_inp.in > test_output/no_min.out 2> test_output/no_min.err)
 [----] tests/test_common.c:60: Assertion failed: The program did not exit with the expected status (expected 0x0, was 0x8b).
-[FAIL] blackbox_suite::no_min: (0.59s)
+[FAIL] blackbox_suite::no_min: (0.38s)
 [RUN ] blackbox_suite::partial_hang
 setup(rm -f test_output/partial_hang.out test_output/partial_hang.err; rm -fr test_output/partial_hang; mkdir -p test_output/partial_hang)
-run(ulimit -t 10; ulimit -f 2000; bin/par --ha 10 < tests/rsrc/simple_text_inp.in > test_output/partial_hang.out 2> test_output/partial_hang.err)
+run(ulimit -t 10; ulimit -f 2000; bin/par --ha=10 < tests/rsrc/simple_text_inp.in > test_output/partial_hang.out 2> test_output/partial_hang.err)
 [----] tests/test_common.c:60: Assertion failed: The program did not exit with the expected status (expected 0x0, was 0x8b).
-[FAIL] blackbox_suite::partial_hang: (0.59s)
+[FAIL] blackbox_suite::partial_hang: (0.37s)
 [RUN ] blackbox_suite::short_hang
 setup(rm -f test_output/short_hang.out test_output/short_hang.err; rm -fr test_output/short_hang; mkdir -p test_output/short_hang)
-run(ulimit -t 10; ulimit -f 2000; bin/par -h 10 < tests/rsrc/simple_text_inp.in > test_output/short_hang.out 2> test_output/short_hang.err)
+run(ulimit -t 10; ulimit -f 2000; bin/par -h10 < tests/rsrc/simple_text_inp.in > test_output/short_hang.out 2> test_output/short_hang.err)
 [----] tests/test_common.c:60: Assertion failed: The program did not exit with the expected status (expected 0x0, was 0x8b).
-[FAIL] blackbox_suite::short_hang: (0.60s)
+[FAIL] blackbox_suite::short_hang: (0.37s)
 [RUN ] blackbox_suite::short_last
 setup(rm -f test_output/short_last.out test_output/short_last.err; rm -fr test_output/short_last; mkdir -p test_output/short_last)
-run(ulimit -t 10; ulimit -f 2000; bin/par -l 1 < tests/rsrc/simple_text_inp.in > test_output/short_last.out 2> test_output/short_last.err)
+run(ulimit -t 10; ulimit -f 2000; bin/par -l1 < tests/rsrc/simple_text_inp.in > test_output/short_last.out 2> test_output/short_last.err)
 [----] tests/test_common.c:60: Assertion failed: The program did not exit with the expected status (expected 0x0, was 0x8b).
-[FAIL] blackbox_suite::short_last: (0.47s)
+[FAIL] blackbox_suite::short_last: (0.38s)
 [RUN ] blackbox_suite::short_min
 setup(rm -f test_output/short_min.out test_output/short_min.err; rm -fr test_output/short_min; mkdir -p test_output/short_min)
-run(ulimit -t 10; ulimit -f 2000; bin/par -m 1 < tests/rsrc/simple_text_inp.in > test_output/short_min.out 2> test_output/short_min.err)
+run(ulimit -t 10; ulimit -f 2000; bin/par -m1 < tests/rsrc/simple_text_inp.in > test_output/short_min.out 2> test_output/short_min.err)
 [----] tests/test_common.c:60: Assertion failed: The program did not exit with the expected status (expected 0x0, was 0x8b).
-[FAIL] blackbox_suite::short_min: (0.54s)
+[FAIL] blackbox_suite::short_min: (0.38s)
 [RUN ] blackbox_suite::short_prefix
 setup(rm -f test_output/short_prefix.out test_output/short_prefix.err; rm -fr test_output/short_prefix; mkdir -p test_output/short_prefix)
 run(ulimit -t 10; ulimit -f 2000; bin/par -p 10 < tests/rsrc/simple_text_inp.in > test_output/short_prefix.out 2> test_output/short_prefix.err)
 [----] tests/test_common.c:60: Assertion failed: The program did not exit with the expected status (expected 0x0, was 0x8b).
-[FAIL] blackbox_suite::short_prefix: (0.58s)
+[FAIL] blackbox_suite::short_prefix: (0.38s)
 [RUN ] blackbox_suite::valgrind_mixed_wps
 setup(rm -f test_output/valgrind_mixed_wps.out test_output/valgrind_mixed_wps.err; rm -fr test_output/valgrind_mixed_wps; mkdir -p test_output/valgrind_mixed_wps)
 run(ulimit -t 10; ulimit -f 2000;valgrind --leak-check=full --undef-value-errors=no --error-exitcode=37 bin/par -w 50 -p 8 --suffix 6 < tests/rsrc/coronavirus.in > test_output/valgrind_mixed_wps.out 2> test_output/valgrind_mixed_wps.err)
 [FAIL] blackbox_suite::valgrind_mixed_wps: Timed out. (5.00s)
 [RUN ] blackbox_suite::valgrind_mixed_wpsh
 setup(rm -f test_output/valgrind_mixed_wpsh.out test_output/valgrind_mixed_wpsh.err; rm -fr test_output/valgrind_mixed_wpsh; mkdir -p test_output/valgrind_mixed_wpsh)
-run(ulimit -t 10; ulimit -f 2000;valgrind --leak-check=full --undef-value-errors=no --error-exitcode=37 bin/par --width 50 --pre 5 -s 9 -h 6 < tests/rsrc/coronavirus.in > test_output/valgrind_mixed_wpsh.out 2> test_output/valgrind_mixed_wpsh.err)
+run(ulimit -t 10; ulimit -f 2000;valgrind --leak-check=full --undef-value-errors=no --error-exitcode=37 bin/par --width=50 --pre 5 -s 9 -h6 < tests/rsrc/coronavirus.in > test_output/valgrind_mixed_wpsh.out 2> test_output/valgrind_mixed_wpsh.err)
 [FAIL] blackbox_suite::valgrind_mixed_wpsh: Timed out. (5.00s)
 [====] Running 6 tests from error_suite:
 [RUN ] error_suite::check_for_error
