@@ -9,6 +9,9 @@
 #include "sfmm.h"
 #include "errno.h"
 
+double curr_pld = 0;
+double max_pld = 0;
+
 void qkl_add(sf_block* block, int i);
 void free_list_add(sf_block* free_block);
 
@@ -190,6 +193,18 @@ sf_block* alloc(int size, int pay_size, int index) {
     return curr;
 }
 
+void update_curr_pld() {
+    sf_block* block = sf_mem_start() + 32;
+    sf_block* end = sf_mem_end() - 16;
+    curr_pld = 0;
+    while (block != end)  {
+        int al = (block->header ^ MAGIC) & THIS_BLOCK_ALLOCATED;
+        int qkl = (block->header ^ MAGIC) & IN_QUICK_LIST;
+        if (al && !qkl) { curr_pld += (block->header ^ MAGIC) >> 32;}
+        block = (void*)block + get_block_size(block);
+    }
+}
+
 void *sf_malloc(sf_size_t size) {
     if (size == 0) {return NULL;}
     if (sf_mem_start() == sf_mem_end()) {
@@ -230,7 +245,9 @@ void *sf_malloc(sf_size_t size) {
         ptr = alloc(size, pay_size, index);       //call alloc with block size, payload size and the ind
     }
 
-    //sf_show_heap();
+    update_curr_pld();
+    if (curr_pld > max_pld) {max_pld = curr_pld;}
+
     if (ptr == NULL) { return NULL; }
     else return ptr->body.payload;
 }
@@ -265,6 +282,8 @@ void sf_free(void *pp) {
     next = (void*) block + block_size;
     next->prev_footer = block->header;
     free_list_add(block);
+    update_curr_pld();
+    if (curr_pld > max_pld) {max_pld = curr_pld;}
 }
 
 void *sf_realloc(void *pp, sf_size_t rsize) {
@@ -275,6 +294,9 @@ void *sf_realloc(void *pp, sf_size_t rsize) {
     int pal =  (block->header ^ MAGIC) & PREV_BLOCK_ALLOCATED;
     if (rsize == 0) {
         sf_free(block);
+        sf_errno = EINVAL;
+        update_curr_pld();
+        if (curr_pld > max_pld) {max_pld = curr_pld;}
         return NULL;
     }
 
@@ -287,6 +309,8 @@ void *sf_realloc(void *pp, sf_size_t rsize) {
     if (block_size > rsize) {
         if (block_size - rsize <= 32) { 
             init_header(block, rsize, block_size, 1, pal, 0); 
+            update_curr_pld();
+            if (curr_pld > max_pld) {max_pld = curr_pld;}
             return block->body.payload;
         }
         else {
@@ -304,19 +328,36 @@ void *sf_realloc(void *pp, sf_size_t rsize) {
             init_header(free_block, 0, block_size, 0, 1, 0);
             coalesce(free_block);                             //add the new free block to its appropriate free list
             free_list_add(free_block);
+            update_curr_pld();
+            if (curr_pld > max_pld) {max_pld = curr_pld;}
             return block->body.payload;
         }
     }
-    sf_show_heap();
+    update_curr_pld();
+    if (curr_pld > max_pld) {max_pld = curr_pld;}
     return new_block;
 }
 
 double sf_internal_fragmentation() {
-    // TO BE IMPLEMENTED
-    abort();
+    double infr = 0.0;
+    if (sf_mem_start == sf_mem_end) {return infr;}
+    sf_block* block = sf_mem_start() + 32;
+    sf_block* end = sf_mem_end() - 16;
+    double tot_pld = 0, tot_al = 0;
+    while (block != end)  {
+        int al = (block->header ^ MAGIC) & THIS_BLOCK_ALLOCATED;
+        int qkl = (block->header ^ MAGIC) & IN_QUICK_LIST;
+        if (al &&! qkl) {
+            tot_pld += (block->header ^ MAGIC) >> 32;
+            tot_al += get_block_size(block);
+        }
+        block = (void*)block + get_block_size(block);
+    }
+    if(tot_al == 0) {return 0;}
+    infr = tot_pld/tot_al;
+    return infr;
 }
 
 double sf_peak_utilization() {
-    // TO BE IMPLEMENTED
     abort();
 }
