@@ -258,3 +258,118 @@ Test(sfmm_basecode_suite, realloc_smaller_block_free_block, .timeout = TEST_TIME
 
 //Test(sfmm_student_suite, student_test_1, .timeout = TEST_TIMEOUT) {
 //}
+
+Test(sfmm_basecode_suite, student_test_malloc_1, .timeout = TEST_TIMEOUT) {
+	sf_errno = 0;
+	size_t sz = sizeof(int);
+	int *x = sf_malloc(sz);
+
+	cr_assert_not_null(x, "x is NULL!");
+
+	*x = 6;
+
+	cr_assert(*x == 6, "sf_malloc failed to give proper space for an int!");
+	sf_block *bp = (sf_block *)((char *)x - 16);
+	cr_assert((bp->header >> 32) & 0xffffffff,
+		  "Malloc'ed block payload size (%ld) not what was expected (%ld)!",
+		  (bp->header >> 32) & 0xffffffff, sz);
+
+	assert_quick_list_block_count(0, 0);
+	assert_free_block_count(0, 1);
+	assert_free_block_count(944, 1);
+
+	cr_assert(sf_errno == 0, "sf_errno is not zero!");
+	cr_assert(sf_mem_start() + PAGE_SZ == sf_mem_end(), "Allocated more than necessary!");
+}
+
+Test(sfmm_basecode_suite, student_test_malloc_2, .timeout = TEST_TIMEOUT) {
+	sf_errno = 0;
+	size_t sz = sizeof(int);
+	int *x = sf_malloc(sz);
+
+	cr_assert_not_null(x, "x is NULL!");
+
+	*x = 12;
+
+	cr_assert(*x == 12, "sf_malloc failed to give proper space for an int!");
+	sf_block *bp = (sf_block *)((char *)x - 16);
+	cr_assert((bp->header >> 32) & 0xffffffff,
+		  "Malloc'ed block payload size (%ld) not what was expected (%ld)!",
+		  (bp->header >> 32) & 0xffffffff, sz);
+
+	assert_quick_list_block_count(0, 0);
+	assert_free_block_count(0, 1);
+	assert_free_block_count(944, 1);
+
+	cr_assert(sf_errno == 0, "sf_errno is not zero!");
+	cr_assert(sf_mem_start() + PAGE_SZ == sf_mem_end(), "Allocated more than necessary!");
+}
+
+Test(sfmm_basecode_suite, student_test_malloc_3, .timeout = TEST_TIMEOUT) {
+	sf_errno = 0;
+	size_t sz = sizeof(int);
+	int *x = sf_malloc(sz);
+
+	cr_assert_not_null(x, "x is NULL!");
+
+	*x =20;
+
+	cr_assert(*x == 20, "sf_malloc failed to give proper space for an int!");
+	sf_block *bp = (sf_block *)((char *)x - 16);
+	cr_assert((bp->header >> 32) & 0xffffffff,
+		  "Malloc'ed block payload size (%ld) not what was expected (%ld)!",
+		  (bp->header >> 32) & 0xffffffff, sz);
+
+	assert_quick_list_block_count(0, 0);
+	assert_free_block_count(0, 1);
+	assert_free_block_count(944, 1);
+
+	cr_assert(sf_errno == 0, "sf_errno is not zero!");
+	cr_assert(sf_mem_start() + PAGE_SZ == sf_mem_end(), "Allocated more than necessary!");
+}
+
+Test(sfmm_basecode_suite, student_test_malloc_4, .timeout = TEST_TIMEOUT) {
+	sf_errno = 0;
+	size_t sz = sizeof(int);
+	int *x = sf_malloc(sz);
+
+	cr_assert_not_null(x, "x is NULL!");
+
+	*x = 26;
+
+	cr_assert(*x == 26, "sf_malloc failed to give proper space for an int!");
+	sf_block *bp = (sf_block *)((char *)x - 16);
+	cr_assert((bp->header >> 32) & 0xffffffff,
+		  "Malloc'ed block payload size (%ld) not what was expected (%ld)!",
+		  (bp->header >> 32) & 0xffffffff, sz);
+
+	assert_quick_list_block_count(0, 0);
+	assert_free_block_count(0, 1);
+	assert_free_block_count(944, 1);
+
+	cr_assert(sf_errno == 0, "sf_errno is not zero!");
+	cr_assert(sf_mem_start() + PAGE_SZ == sf_mem_end(), "Allocated more than necessary!");
+}
+
+Test(sfmm_basecode_suite, student_test_malloc_5, .timeout = TEST_TIMEOUT) {
+	sf_errno = 0;
+	size_t sz = sizeof(int);
+	int *x = sf_malloc(sz);
+
+	cr_assert_not_null(x, "x is NULL!");
+
+	*x = 18;
+
+	cr_assert(*x == 18, "sf_malloc failed to give proper space for an int!");
+	sf_block *bp = (sf_block *)((char *)x - 16);
+	cr_assert((bp->header >> 32) & 0xffffffff,
+		  "Malloc'ed block payload size (%ld) not what was expected (%ld)!",
+		  (bp->header >> 32) & 0xffffffff, sz);
+
+	assert_quick_list_block_count(0, 0);
+	assert_free_block_count(0, 1);
+	assert_free_block_count(944, 1);
+
+	cr_assert(sf_errno == 0, "sf_errno is not zero!");
+	cr_assert(sf_mem_start() + PAGE_SZ == sf_mem_end(), "Allocated more than necessary!");
+}
