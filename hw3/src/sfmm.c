@@ -13,26 +13,26 @@ void qkl_add(sf_block* block, int i);
 void free_list_add(sf_block* free_block);
 
 int get_block_size(sf_block* block) { 
-    int size = block->header & 0xFFFFFFF0;
-    block->header ^= MAGIC;
+    int size = (block->header ^ MAGIC) & 0xFFFFFFF0;
     return size;
 } //retrieve bits 33-60 and store in variable block_size
 
 //initializes headers of blocks, takes the block, payload size, block_size, is_alloc = 0 if free or pro/epilogue
 void init_header(sf_block* block, sf_size_t pay_size, int block_size, int is_al, int is_pal, int is_qkl) {
-    sf_set_magic(0x0);                    //set MAGIC to 0
     block->header = 0;                    //initialize payload as 0
     if (pay_size != 0) {                  //if payload size > 0, then the payload is set
         block->header |= pay_size;        //set header = payload
         block->header <<= 32;             //bit shift by 32
     }
+    block->header ^= MAGIC;   
     int ret = get_block_size(block);         //retrieve bits 33-60 and store in variable ret
+    block->header ^= MAGIC;   
     ret |= block_size;                       //or ret with block size 
     block->header |= ret;                     //set header to ret value
     if (is_al != 0) {block->header |= THIS_BLOCK_ALLOCATED;}   //or with 0x4 to set alloc bit to 1
     if (is_pal != 0) {block->header |= PREV_BLOCK_ALLOCATED;}  //or with 0x2 to set prev_alloc bit to 1
-    if (is_qkl != 0) {block->header |= IN_QUICK_LIST;}         //or with 0x1 to set in qklst bit to 1
-    block->header ^= MAGIC;                                    //obfuscate header
+    if (is_qkl != 0) {block->header |= IN_QUICK_LIST;}         //or with 0x1 to set in qklst bit to 1     
+    block->header ^= MAGIC;                             //obfuscate header
 }
 
 void init_free_list_heads() {
@@ -69,8 +69,7 @@ void qkl_add(sf_block* block, int i) {
         } 
     }
     int size = get_block_size(block);
-    int pal = block->header & PREV_BLOCK_ALLOCATED;
-    block->header ^= MAGIC;
+    int pal = (block->header ^ MAGIC) & PREV_BLOCK_ALLOCATED;
     init_header(block, 0, size, 1, pal, 1);
     block->body.links.next = sf_quick_lists[i].first;
     sf_quick_lists[i].first = block;
@@ -105,12 +104,11 @@ sf_block* grow_heap() {
     sf_block* free_block = sf_mem_end() - 16;                 //new freeblock starts at where epilogue was
     if (sf_mem_grow() == NULL) {return NULL; }                //request a new page
     else {
-        int pal = free_block->header & PREV_BLOCK_ALLOCATED;      //get the prev alloc bit
+        int pal = (free_block->header ^ MAGIC) & PREV_BLOCK_ALLOCATED;      //get the prev alloc bit
         init_header(free_block, 0, PAGE_SZ, 0, pal, 0);           //initialize free block
         sf_block* epilogue = (void*)free_block + PAGE_SZ;         //addr of new epilogue is free block + 1024
         init_header(epilogue, 0, 0, 1, 0, 0);                     //initialize epilogue
         epilogue->prev_footer = free_block->header;               //initiliaze footer of free block   
-        free_block->header ^= MAGIC;
         return free_block;
     }
 }
@@ -118,28 +116,26 @@ sf_block* grow_heap() {
 sf_block* coalesce(sf_block* curr) {
     sf_block* next, * prev;
     int curr_size = get_block_size(curr), prev_size, next_size;
-    int pal = curr->header & PREV_BLOCK_ALLOCATED;       //get the prev alloc bit
+    int pal = (curr->header ^ MAGIC) & PREV_BLOCK_ALLOCATED;       //get the prev alloc bit
     
     next = (void*) curr + curr_size;                     //get addr of next block
-    int al = next->header & THIS_BLOCK_ALLOCATED;       //get the alloc bit
+    int al = (next->header ^ MAGIC) & THIS_BLOCK_ALLOCATED;       //get the alloc bit
     if(al == 0) {
         next_size = get_block_size(next);               //get next size
         curr_size += next_size;                         //add next size to curr size
         init_header(curr, 0, curr_size, 0, pal, 0);
         sf_block* next_next = (void*)next+next_size;
         next_next->prev_footer = curr->header;               //update footer of curr
-        curr->header ^= MAGIC;
         remove_free_block(next);
     }
     if (pal == 0) {  
-        prev_size = curr->prev_footer & 0xFFFFFFF0;     //get prev block size
+        prev_size = (curr->prev_footer ^ MAGIC) & 0xFFFFFFF0;     //get prev block size
         prev = (void*)curr - prev_size;                  //prev = prev block addr
-        pal = prev->header & PREV_BLOCK_ALLOCATED;      //get the prev alloc bit
+        pal = (prev->header ^ MAGIC) & PREV_BLOCK_ALLOCATED;      //get the prev alloc bit
         prev_size += curr_size;                         //add curr size to prev
         init_header(prev, 0, prev_size, 0, pal, 0);
         sf_block* curr_next = (void*)curr + curr_size;
         curr_next->prev_footer = prev->header;               //init prev footer
-        prev->header ^= MAGIC;
         curr = prev;                             //curr = prev
     }
     return curr;
@@ -175,7 +171,7 @@ sf_block* alloc(int size, int pay_size, int index) {
         }
     }      
     int free_block_size = get_block_size(curr);         //get the size of the free block
-    int pal = curr->header & PREV_BLOCK_ALLOCATED;      //get the prev alloc bit
+    int pal = (curr->header ^ MAGIC) & PREV_BLOCK_ALLOCATED;      //get the prev alloc bit
     if (size == free_block_size || free_block_size - size < 32) { 
         init_header(curr, pay_size, size, 1, pal, 0); 
         remove_free_block(curr);
@@ -211,7 +207,6 @@ void *sf_malloc(sf_size_t size) {
         sf_block* free_block = sf_mem_start() + 32;
         init_header(free_block, 0, PAGE_SZ-48, 0, 1, 0);//create a free block spanning the page
         epilogue->prev_footer = free_block->header;     //set epilogue's footer to free block's header
-        free_block->header ^= MAGIC;
         init_free_list_heads();                         //initialize all the sentinels in the array of segregated free lists
         free_list_add(free_block);                      //add the free_block to the appropriate free list
     }
@@ -227,7 +222,7 @@ void *sf_malloc(sf_size_t size) {
     sf_block* ptr;
     if (index < QUICK_LIST_MAX && sf_quick_lists[index].length != 0) {
         ptr = sf_quick_lists[index].first; 
-        int pal = ptr->header & PREV_BLOCK_ALLOCATED;
+        int pal =  (ptr->header ^ MAGIC) & PREV_BLOCK_ALLOCATED;
         init_header(ptr, pay_size, size, 1, pal, 0);
         qkl_remove(index);
     } else {
@@ -242,11 +237,10 @@ void *sf_malloc(sf_size_t size) {
 
 int is_valid(void *pp) {
     sf_block* block = pp-16;
-    block->header ^= MAGIC;
     int block_size = get_block_size(block);
-    int al = block->header & THIS_BLOCK_ALLOCATED;
-    int pal = block->header & PREV_BLOCK_ALLOCATED;
-    int al_prev = block->prev_footer & THIS_BLOCK_ALLOCATED;
+    int al = (block->header ^ MAGIC) & THIS_BLOCK_ALLOCATED;
+    int pal =  (block->header ^ MAGIC) & PREV_BLOCK_ALLOCATED;
+    int al_prev =  (block->prev_footer ^ MAGIC) & THIS_BLOCK_ALLOCATED;
 
     if (pp == NULL) {return 0;}
     if ((uintptr_t)pp % 16 != 0) {return 0;}
@@ -261,9 +255,8 @@ void sf_free(void *pp) {
     int val = is_valid(pp);
     if (val == 0) {abort();}
     sf_block* block = pp-16;
-    block->header ^= MAGIC;
     int block_size = get_block_size(block);
-    int pal = block->header & PREV_BLOCK_ALLOCATED;
+    int pal =  (block->header ^ MAGIC) & PREV_BLOCK_ALLOCATED;
     init_header(block, 0, block_size, 0, pal, 0);
     sf_block* next = (void*) block + block_size;
     next->prev_footer = block->header;
@@ -271,7 +264,6 @@ void sf_free(void *pp) {
     get_block_size(block);
     next = (void*) block + block_size;
     next->prev_footer = block->header;
-    block->header ^= MAGIC;
     free_list_add(block);
 }
 
@@ -279,10 +271,8 @@ void *sf_realloc(void *pp, sf_size_t rsize) {
     int val = is_valid(pp);
     if (val == 0) {abort();}
     sf_block* block = pp-16;
-    block->header ^= MAGIC;
     int block_size = get_block_size(block);
-    int pal = block->header & PREV_BLOCK_ALLOCATED;
-    block->header ^= MAGIC;
+    int pal =  (block->header ^ MAGIC) & PREV_BLOCK_ALLOCATED;
     if (rsize == 0) {
         sf_free(block);
         return NULL;
