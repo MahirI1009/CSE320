@@ -335,7 +335,6 @@ void *sf_realloc(void *pp, sf_size_t rsize) {
     }
     update_curr_pld();
     if (curr_pld > max_pld) {max_pld = curr_pld;}
-    sf_show_heap();
     return new_block;
 }
 
