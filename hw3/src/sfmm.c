@@ -359,5 +359,10 @@ double sf_internal_fragmentation() {
 }
 
 double sf_peak_utilization() {
-    abort();
+    double pkut = 0.0;
+    if (sf_mem_start == sf_mem_end) {return pkut;}
+    double heap_size = sf_mem_end() - sf_mem_start();
+    if (max_pld == 0) {return pkut;}
+    pkut = max_pld/heap_size;
+    return pkut;
 }
