@@ -1,0 +1,52 @@
+Graded Commit:0f6e5f27c2781ccd512c4304bc6043c9984927dd
+
+TEST NAME, POINTS,OUT OF
+sf_memsuite_grading/free_block_too_small,1,1,
+sf_memsuite_grading/free_null,0,1,0 assertion(s) failed.: None
+sf_memsuite_grading/free_prev_alloc,1,1,
+sf_memsuite_grading/free_unallocated,1,1,
+sf_memsuite_grading/initialization,0,1,1 assertion(s) failed.: tests/__grading_helpers.c:100: Free block at 0x55a21d005188 is not contained in the free list
+sf_memsuite_grading/internal_fragmentation,0,1,The test timed out.: None
+sf_memsuite_grading/malloc_free_coalesce_both,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:137: Block 0x55c08a66b1c8 has wrong block_size (got 208, expected 800)"
+sf_memsuite_grading/malloc_free_coalesce_lower,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:137: Block 0x55b578047298 has wrong block_size (got 272, expected 592)"
+sf_memsuite_grading/malloc_free_coalesce_upper,0,1,1 assertion(s) failed.: tests/__grading_helpers.c:86: Prev allocated bit is not correctly set for 0x5563408564e8. Should be: 0
+sf_memsuite_grading/malloc_free_first_block,0,1,1 assertion(s) failed.: tests/__grading_helpers.c:86: Prev allocated bit is not correctly set for 0x55fcbe7a3298. Should be: 0
+sf_memsuite_grading/malloc_free_last_block,0,1,The test timed out.: None
+sf_memsuite_grading/malloc_free_lifo,0,1,The test timed out.: None
+sf_memsuite_grading/malloc_free_no_coalesce,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:133: Block 0x55d464920208 has wrong allocation status (got 0, expected 1)"
+sf_memsuite_grading/malloc_to_exhaustion,0,1,The test crashed.: None
+sf_memsuite_grading/malloc_with_splinter,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:137: Block 0x55b98b5ea1c8 has wrong block_size (got 960, expected 976)"
+sf_memsuite_grading/multiple_quick_lists,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:203: Wrong number of quick list blocks (exp=5, found=2)"
+sf_memsuite_grading/non_abort_test,1,1,
+sf_memsuite_grading/peak_utilization,0,1,"1 assertion(s) failed.: tests/grading_tests_p2.c:287: peak utilization_1 did not match (exp=0.791016, found=0.395508)"
+sf_memsuite_grading/quick_list_flush,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:203: Wrong number of quick list blocks (exp=1, found=5)"
+sf_memsuite_grading/realloc_internal_fragmentation,0,1,The test timed out.: None
+sf_memsuite_grading/realloc_larger,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:133: Block 0x5655437d3228 has wrong allocation status (got 0, expected 1)"
+sf_memsuite_grading/realloc_same,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:181: Wrong number of free blocks of size 448 (exp=1, found=0)"
+sf_memsuite_grading/realloc_size_0,0,1,The test crashed.: None
+sf_memsuite_grading/realloc_smaller,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:181: Wrong number of free blocks of size 768 (exp=1, found=0)"
+sf_memsuite_grading/realloc_splinter,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:137: Block 0x556ca44df168 has wrong block_size (got 512, expected 528)"
+sf_memsuite_grading/simple_quick_list,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:203: Wrong number of quick list blocks (exp=1, found=0)"
+sf_memsuite_grading/single_malloc_1,0,1,1 assertion(s) failed.: tests/__grading_helpers.c:100: Free block at 0x55afd050d188 is not contained in the free list
+sf_memsuite_grading/single_malloc_16,0,1,1 assertion(s) failed.: tests/__grading_helpers.c:100: Free block at 0x55dc96d1e188 is not contained in the free list
+sf_memsuite_grading/single_malloc_32,0,1,1 assertion(s) failed.: tests/__grading_helpers.c:100: Free block at 0x55ce24d37198 is not contained in the free list
+sf_memsuite_grading/single_malloc_exactly_one_page_needed,0,1,The test timed out.: None
+sf_memsuite_grading/single_malloc_max,0,1,1 assertion(s) failed.: tests/__grading_helpers.c:100: Free block at 0x5562d1eaf168 is not contained in the free list
+sf_memsuite_grading/single_malloc_more_than_one_page_needed,0,1,The test timed out.: None
+sf_memsuite_grading/single_malloc_three_pages_needed,0,1,The test crashed.: None
+sf_memsuite_grading/stress_test,0,1,The test crashed.: None
+sfmm_basecode_suite/free_coalesce,1,1,
+sfmm_basecode_suite/free_no_coalesce,1,1,
+sfmm_basecode_suite/free_quick,1,1,
+sfmm_basecode_suite/freelist,0,1,"1 assertion(s) failed.: tests/sfmm_tests.c:179: Wrong first block in free list 3: (found=0x561fdb549ec8, exp=0x561fdc901318)"
+sfmm_basecode_suite/malloc_an_int,1,1,
+sfmm_basecode_suite/malloc_four_pages,1,1,
+sfmm_basecode_suite/malloc_too_large,1,1,
+sfmm_basecode_suite/realloc_larger_block,0,1,1 assertion(s) failed.: tests/sfmm_tests.c:193: Realloc'ed block size (1218640032) not what was expected (96)!
+sfmm_basecode_suite/realloc_smaller_block_free_block,1,1,
+sfmm_basecode_suite/realloc_smaller_block_splinter,1,1,
+total,12,44extra_test1,0.6,0.6
+extra_test2,0.6,0.6
+extra_test3,0.6,0.6
+extra_test4,0.6,0.6
+extra_test5,0.6,0.6
