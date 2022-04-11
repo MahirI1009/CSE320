@@ -14,6 +14,21 @@
  * variable is the string representation of an integer.
  */
 
+typedef struct node {
+    char* name;
+    char* value;
+    struct node *next;
+}node;
+
+int listExists = 0;
+node* head;
+
+void makeList() {
+    listExists = 1;
+    head = malloc(sizeof(node));
+    head->next = NULL;
+}
+
 /**
  * @brief  Get the current value of a variable as a string.
  * @details  This function retrieves the current value of a variable
@@ -29,8 +44,14 @@
  * otherwise NULL.
  */
 char *store_get_string(char *var) {
-    // TO BE IMPLEMENTED
-    abort();
+    if (var == "") {return -1;}
+    if (listExists == 0) {makeList();}
+    node* curr = head->next;
+    while (curr != NULL) {
+        if (curr->name == var) {return curr->value;}
+        else curr = curr->next;
+    }
+    return NULL;
 }
 
 /**
@@ -47,8 +68,18 @@ char *store_get_string(char *var) {
  * otherwise 0 is returned.
  */
 int store_get_int(char *var, long *valp) {
-    // TO BE IMPLEMENTED
-    abort();
+    if (var == "") {return -1;}
+    if (listExists == 0) {makeList();}
+    node *curr = head->next;
+    while (curr != NULL) {
+        if (curr->name == var) {
+            valp = atoi(curr->value);
+            if (valp == 0) {return -1;}
+            else return 0;
+        }
+        else curr = curr->next;
+    }
+    return -1;
 }
 
 /**
@@ -67,8 +98,17 @@ int store_get_int(char *var, long *valp) {
  * un-set.
  */
 int store_set_string(char *var, char *val) {
-    // TO BE IMPLEMENTED
-    abort();
+    if (var == "") {return -1;}
+    if (listExists == 0) {makeList();}
+    node *curr = head->next;
+    while (curr != NULL) {
+        if (curr->name == var) {
+            curr->value = val;
+            return 0;
+        }
+        else curr = curr->next;
+    }
+    return -1;
 }
 
 /**
@@ -84,8 +124,20 @@ int store_set_string(char *var, char *val) {
  * @param  val  The value to set.
  */
 int store_set_int(char *var, long val) {
-    // TO BE IMPLEMENTED
-    abort();
+    if (var == "") {return -1;}
+    if (listExists == 0) {makeList();}
+    node *curr = head->next;
+    while (curr != NULL) {
+        if (curr->name == var) {
+            char* str;
+            sprintf(str, "%ld", val);
+            if (str != 0) {
+                curr->value = str;
+                return 0;
+            } else return -1;
+        } else curr = curr->next;
+    }
+    return -1;
 }
 
 /**
@@ -97,6 +149,13 @@ int store_set_int(char *var, long val) {
  * @param f  The stream to which the store contents are to be printed.
  */
 void store_show(FILE *f) {
-    // TO BE IMPLEMENTED
-    abort();
+    if (listExists == 0) {makeList();}
+    node *curr = head->next;
+    while (curr != NULL) { 
+        fprintf(f, curr->name);
+        fprintf(f, " ");
+        fprintf(f, curr->value);
+        fprintf(f, "\n");
+        curr = curr->next;
+    }
 }

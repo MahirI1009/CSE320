@@ -38,6 +38,17 @@
  * as required by the implementation of the various functions in this module.
  */
 
+enum status {new, running, completed, aborted, canceled};
+
+typedef struct job {
+    int *jobid;
+    int *pgid;
+    enum status *status;
+    struct pipeline *pipeline;
+}job;
+
+static job jobs[MAX_JOBS];
+
 /**
  * @brief  Initialize the jobs module.
  * @details  This function is used to initialize the jobs module.
@@ -47,8 +58,13 @@
  * @return 0 if initialization is successful, otherwise -1.
  */
 int jobs_init(void) {
-    // TO BE IMPLEMENTED
-    abort();
+    for (int i = 0; i < MAX_JOBS; i++) {
+        jobs[i].jobid = 0;
+        jobs[i].pgid = 0;
+        jobs[i].status = new;
+        jobs[i].pipeline = NULL;
+    }
+    return 0;
 }
 
 /**
@@ -62,8 +78,9 @@ int jobs_init(void) {
  * @return 0 if finalization is completely successful, otherwise -1.
  */
 int jobs_fini(void) {
-    // TO BE IMPLEMENTED
-    abort();
+    for (int i = 0; i < MAX_JOBS; i++) {
+        
+    }
 }
 
 /**
@@ -83,8 +100,17 @@ int jobs_fini(void) {
  * @return 0  If the jobs table was successfully printed, -1 otherwise.
  */
 int jobs_show(FILE *file) {
-    // TO BE IMPLEMENTED
-    abort();
+    for (int i = 0; i < MAX_JOBS; i++) {
+        fprintf(file, jobs[i].jobid);
+        fprintf(file, "\t");
+        fprintf(file, jobs[i].pgid);
+        fprintf(file, "\t");
+        fprintf(file, jobs[i].status);
+        fprintf(file, "\t");
+        fprintf(file, jobs[i].pipeline);
+        fprintf(file, "\n");
+    }
+    return 0;
 }
 
 /**
@@ -122,7 +148,7 @@ int jobs_show(FILE *file) {
  */
 int jobs_run(PIPELINE *pline) {
     // TO BE IMPLEMENTED
-    abort();
+    return 0;
 }
 
 /**
@@ -137,7 +163,7 @@ int jobs_run(PIPELINE *pline) {
  */
 int jobs_wait(int jobid) {
     // TO BE IMPLEMENTED
-    abort();
+    return 0;
 }
 
 /**
@@ -152,7 +178,7 @@ int jobs_wait(int jobid) {
  */
 int jobs_poll(int jobid) {
     // TO BE IMPLEMENTED
-    abort();
+    return 0;
 }
 
 /**
@@ -169,7 +195,7 @@ int jobs_poll(int jobid) {
  */
 int jobs_expunge(int jobid) {
     // TO BE IMPLEMENTED
-    abort();
+    return 0;
 }
 
 /**
@@ -191,7 +217,7 @@ int jobs_expunge(int jobid) {
  */
 int jobs_cancel(int jobid) {
     // TO BE IMPLEMENTED
-    abort();
+    return 0;
 }
 
 /**
@@ -206,7 +232,7 @@ int jobs_cancel(int jobid) {
  */
 char *jobs_get_output(int jobid) {
     // TO BE IMPLEMENTED
-    abort();
+    return "A";
 }
 
 /**
@@ -219,5 +245,5 @@ char *jobs_get_output(int jobid) {
  */
 int jobs_pause(void) {
     // TO BE IMPLEMENTED
-    abort();
+    return 0;
 }

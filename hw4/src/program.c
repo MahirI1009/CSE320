@@ -4,6 +4,23 @@
 #include "mush.h"
 #include "debug.h"
 
+typedef struct node {
+    STMT stmt;
+    struct node *next;
+}node;
+
+node *head;
+
+int pCtr = -1;
+int listExists = 0;
+STMT stmt;
+
+void makelist() {
+    listExists = 1;
+    head = malloc(sizeof(node));
+    head->next = NULL;
+}
+
 /*
  * This is the "program store" module for Mush.
  * It maintains a set of numbered statements, along with a "program counter"
@@ -25,8 +42,15 @@
  * @return  0 if successful, -1 if any error occurred.
  */
 int prog_list(FILE *out) {
-    // TO BE IMPLEMENTED
-    abort();
+    if (listExists == 0) {makelist();}
+    if (head == NULL) {return -1;}
+
+    node *curr = head->next;
+    while (curr != NULL) { 
+        show_stmt(out, &(curr->stmt));
+        curr = curr->next;
+    }
+    return 0;
 }
 
 /**
@@ -47,8 +71,44 @@ int prog_list(FILE *out) {
  * @return  0 if successful, -1 if any error occurred.
  */
 int prog_insert(STMT *stmt) {
-    // TO BE IMPLEMENTED
-    abort();
+    if (listExists == 0) {makelist();}         //initialize list for first time
+    
+    //insert to front of list
+    if (head->next == NULL) {
+        node *newStmt = malloc(sizeof(node));
+        newStmt->stmt = *stmt;
+        newStmt->next = NULL;
+        head->next = newStmt;
+        return 0;
+    }
+    node *curr = head->next, *prev = head;  
+    //go through linkedlist to find a place to insert node
+    while (curr != NULL) {
+        //insert a new node
+        if (stmt->lineno < curr->stmt.lineno) {
+            node *newStmt = malloc(sizeof(node));
+            newStmt->stmt = *stmt;
+            newStmt->next = curr;
+            prev->next = newStmt;
+            return 0;
+        }
+        //replace a node with the same line #
+        if (stmt->lineno == curr->stmt.lineno) {
+            free_stmt(&(curr->stmt));
+            curr->stmt = *stmt;
+            return 0;
+        }
+        prev = curr;
+        curr = curr->next;
+    }
+    //insert at end of list
+    if (curr == NULL) {
+        node *newStmt = malloc(sizeof(node));
+        newStmt->stmt = *stmt;
+        newStmt->next = NULL;
+        prev->next = newStmt;
+    }
+    return 0;
 }
 
 /**
@@ -69,8 +129,26 @@ int prog_insert(STMT *stmt) {
  * @param max  Upper end of the range of line numbers to be deleted.
  */
 int prog_delete(int min, int max) {
-    // TO BE IMPLEMENTED
-    abort();
+    if (listExists == 0) {makelist();}
+    if (head == NULL) {return -1;}
+    
+    node *curr = head->next;
+    node* next = curr->next;
+    if (curr == NULL || next == NULL) {return -1;}
+
+    while (curr != NULL && next != NULL) {
+        if (next->stmt.lineno >= min && next->stmt.lineno <= max) {
+            node* del = next;
+            next = del->next;
+            curr->next = next;
+            free(del);
+        } else if (curr->stmt.lineno > max) {return 0;}
+        else {
+            curr = curr->next;
+            next = curr->next;
+        }
+    }
+    return 0;
 }
 
 /**
@@ -78,9 +156,9 @@ int prog_delete(int min, int max) {
  * @details  This function resets the program counter to point just
  * before the first statement in the program.
  */
-void prog_reset(void) {
-    // TO BE IMPLEMENTED
-    abort();
+void prog_reset(void) { 
+    node* curr = head->next;
+    if (curr != NULL) { pCtr = (curr->stmt.lineno) - 1; }
 }
 
 /**
@@ -95,8 +173,18 @@ void prog_reset(void) {
  * counter position, if any, otherwise NULL.
  */
 STMT *prog_fetch(void) {
-    // TO BE IMPLEMENTED
-    abort();
+    if (listExists == 0) {makelist();}
+    if (head == NULL) {return NULL;}
+
+    node *curr = head->next;
+    while (curr != NULL) { 
+        if (curr->stmt.lineno == pCtr) { 
+            stmt = curr->next->stmt;
+            return &stmt;
+        } 
+        curr = curr->next;
+    }
+    return NULL;
 }
 
 /**
@@ -111,8 +199,19 @@ STMT *prog_fetch(void) {
  * position, if any, otherwise NULL.
  */
 STMT *prog_next() {
-    // TO BE IMPLEMENTED
-    abort();
+    if (listExists == 0) {makelist();}
+    if (head == NULL) {return NULL;}
+
+    node *curr = head->next;
+    while (curr != NULL) { 
+        if (curr->stmt.lineno == pCtr) { 
+            pCtr = curr->next->stmt.lineno;
+            stmt = curr->next->stmt;
+            return &stmt;
+        }
+        curr = curr->next;
+    }
+    return NULL;
 }
 
 /**
@@ -131,6 +230,17 @@ STMT *prog_next() {
  * statement exists, otherwise NULL.
  */
 STMT *prog_goto(int lineno) {
-    // TO BE IMPLEMENTED
-    abort();
+    if (listExists == 0) {makelist();}
+    if (head == NULL) {return NULL;}
+
+    node *curr = head->next;
+    while (curr != NULL && curr->next != NULL) { 
+        if (lineno == curr->next->stmt.lineno) {
+            lineno = curr->stmt.lineno;
+            stmt = curr->stmt;
+            return &stmt;
+        }
+        curr = curr->next;
+    }
+    return NULL;
 }
