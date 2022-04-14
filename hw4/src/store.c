@@ -14,18 +14,20 @@
  * variable is the string representation of an integer.
  */
 
-typedef struct node {
+typedef struct storeNode {
     char* name;
     char* value;
-    struct node *next;
-}node;
+    struct storeNode *next;
+}storeNode;
 
-int listExists = 0;
-node* head;
+int storeExists = 0;
+storeNode* head;
 
 void makeList() {
-    listExists = 1;
-    head = malloc(sizeof(node));
+    storeExists = 1;
+    head = malloc(sizeof(storeNode));
+    head->name = malloc(strlen("head"));
+    strcpy(head->name, "head");
     head->next = NULL;
 }
 
@@ -44,11 +46,11 @@ void makeList() {
  * otherwise NULL.
  */
 char *store_get_string(char *var) {
-    if (var == "") {return -1;}
-    if (listExists == 0) {makeList();}
-    node* curr = head->next;
+    if (var == NULL) {return NULL;}
+    if (storeExists == 0) {makeList();}
+    storeNode* curr = head;
     while (curr != NULL) {
-        if (curr->name == var) {return curr->value;}
+        if (strcmp(curr->name, var) == 0) {return curr->value;}
         else curr = curr->next;
     }
     return NULL;
@@ -68,12 +70,13 @@ char *store_get_string(char *var) {
  * otherwise 0 is returned.
  */
 int store_get_int(char *var, long *valp) {
-    if (var == "") {return -1;}
-    if (listExists == 0) {makeList();}
-    node *curr = head->next;
+    if (var == NULL) {return -1;}
+    if (storeExists == 0) {makeList();}
+    storeNode *curr = head;
     while (curr != NULL) {
-        if (curr->name == var) {
-            valp = atoi(curr->value);
+        if (strcmp(curr->name, var) == 0) {
+            char** ptr = 0;
+            *valp = strtol(curr->value, ptr, 10);
             if (valp == 0) {return -1;}
             else return 0;
         }
@@ -98,15 +101,23 @@ int store_get_int(char *var, long *valp) {
  * un-set.
  */
 int store_set_string(char *var, char *val) {
-    if (var == "") {return -1;}
-    if (listExists == 0) {makeList();}
-    node *curr = head->next;
+    if (var == NULL) {return -1;}
+    if (storeExists == 0) {makeList();}
+    storeNode *curr = head;
     while (curr != NULL) {
-        if (curr->name == var) {
-            curr->value = val;
+        if (strcmp(curr->name, var) == 0) {
+            strcpy(curr->value, val);
             return 0;
-        }
-        else curr = curr->next;
+        } else if (curr->next == NULL) {
+            storeNode *newNode = malloc(sizeof(storeNode));
+            newNode->name = malloc(strlen(var));
+            strcpy(newNode->name, var);
+            newNode->value = malloc(strlen(val));
+            strcpy(newNode->value, val);
+            newNode->next = NULL;
+            curr->next = newNode;
+            return 0;
+        } else curr = curr->next;
     }
     return -1;
 }
@@ -124,17 +135,27 @@ int store_set_string(char *var, char *val) {
  * @param  val  The value to set.
  */
 int store_set_int(char *var, long val) {
-    if (var == "") {return -1;}
-    if (listExists == 0) {makeList();}
-    node *curr = head->next;
+    if (var == NULL) {return -1;}
+    if (storeExists == 0) {makeList();}
+    storeNode *curr = head;
     while (curr != NULL) {
-        if (curr->name == var) {
-            char* str;
+        if (strcmp(curr->name, var) == 0) {
+            char* str = malloc(sizeof(long));
             sprintf(str, "%ld", val);
             if (str != 0) {
                 curr->value = str;
                 return 0;
             } else return -1;
+        } else if (curr->next == NULL) {
+            storeNode* newNode = malloc(sizeof(storeNode));
+            newNode->name = var;
+            char* str = malloc(sizeof(long));
+            sprintf(str, "%ld", val);
+            if (str != 0) { newNode->value = str; }
+            else return -1;
+            newNode->next = NULL;
+            curr->next = newNode;
+            return 0;
         } else curr = curr->next;
     }
     return -1;
@@ -149,13 +170,14 @@ int store_set_int(char *var, long val) {
  * @param f  The stream to which the store contents are to be printed.
  */
 void store_show(FILE *f) {
-    if (listExists == 0) {makeList();}
-    node *curr = head->next;
+    if (storeExists == 0) {makeList();}
+    storeNode *curr = head->next;
     while (curr != NULL) { 
-        fprintf(f, curr->name);
-        fprintf(f, " ");
-        fprintf(f, curr->value);
-        fprintf(f, "\n");
+        fputs("{", f);
+        fputs(curr->name, f);
+        fputs("=", f);
+        fputs(curr->value, f);
+        fputs("}\n", f);
         curr = curr->next;
     }
 }
