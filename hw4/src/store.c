@@ -21,14 +21,14 @@ typedef struct storeNode {
 }storeNode;
 
 int storeExists = 0;
-storeNode* head;
+storeNode* sentinel;
 
 void makeList() {
     storeExists = 1;
-    head = malloc(sizeof(storeNode));
-    head->name = malloc(strlen("head"));
-    strcpy(head->name, "head");
-    head->next = NULL;
+    sentinel = malloc(sizeof(storeNode));
+    sentinel->name = malloc(strlen("sentinel"));
+    strcpy(sentinel->name, "sentinel");
+    sentinel->next = NULL;
 }
 
 /**
@@ -48,7 +48,7 @@ void makeList() {
 char *store_get_string(char *var) {
     if (var == NULL) {return NULL;}
     if (storeExists == 0) {makeList();}
-    storeNode* curr = head;
+    storeNode* curr = sentinel;
     while (curr != NULL) {
         if (strcmp(curr->name, var) == 0) {return curr->value;}
         else curr = curr->next;
@@ -72,7 +72,7 @@ char *store_get_string(char *var) {
 int store_get_int(char *var, long *valp) {
     if (var == NULL) {return -1;}
     if (storeExists == 0) {makeList();}
-    storeNode *curr = head;
+    storeNode *curr = sentinel;
     while (curr != NULL) {
         if (strcmp(curr->name, var) == 0) {
             char** ptr = 0;
@@ -103,7 +103,7 @@ int store_get_int(char *var, long *valp) {
 int store_set_string(char *var, char *val) {
     if (var == NULL) {return -1;}
     if (storeExists == 0) {makeList();}
-    storeNode *curr = head;
+    storeNode *curr = sentinel;
     while (curr != NULL) {
         if (strcmp(curr->name, var) == 0) {
             strcpy(curr->value, val);
@@ -137,7 +137,7 @@ int store_set_string(char *var, char *val) {
 int store_set_int(char *var, long val) {
     if (var == NULL) {return -1;}
     if (storeExists == 0) {makeList();}
-    storeNode *curr = head;
+    storeNode *curr = sentinel;
     while (curr != NULL) {
         if (strcmp(curr->name, var) == 0) {
             char* str = malloc(sizeof(long));
@@ -170,14 +170,16 @@ int store_set_int(char *var, long val) {
  * @param f  The stream to which the store contents are to be printed.
  */
 void store_show(FILE *f) {
-    if (storeExists == 0) {makeList();}
-    storeNode *curr = head->next;
-    while (curr != NULL) { 
+    if (storeExists != 0) {
+        storeNode *curr = sentinel->next;
         fputs("{", f);
-        fputs(curr->name, f);
-        fputs("=", f);
-        fputs(curr->value, f);
+        while (curr != NULL) { 
+            fputs(curr->name, f);
+            fputs("=", f);
+            fputs(curr->value, f);
+            if (curr->next != NULL) {fputs(", ", f);}
+            curr = curr->next;
+        }
         fputs("}\n", f);
-        curr = curr->next;
-    }
+    } else makeList();
 }

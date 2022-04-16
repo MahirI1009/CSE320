@@ -41,13 +41,13 @@
 enum status {new, running, completed, aborted, canceled};
 
 typedef struct job {
-    int *jobid;
-    int *pgid;
-    enum status *status;
+    int jobid;
+    int pgid;
+    enum status status;
     struct pipeline *pipeline;
 }job;
 
-static job jobs[MAX_JOBS];
+static job *jobs[MAX_JOBS];
 
 /**
  * @brief  Initialize the jobs module.
@@ -59,10 +59,11 @@ static job jobs[MAX_JOBS];
  */
 int jobs_init(void) {
     for (int i = 0; i < MAX_JOBS; i++) {
-        jobs[i].jobid = 0;
-        jobs[i].pgid = 0;
-        jobs[i].status = new;
-        jobs[i].pipeline = NULL;
+        jobs[i] = malloc(sizeof(job));
+        jobs[i]->jobid = 0;
+        jobs[i]->pgid = 0;
+        jobs[i]->status = new;
+        jobs[i]->pipeline = NULL;
     }
     return 0;
 }
@@ -78,9 +79,7 @@ int jobs_init(void) {
  * @return 0 if finalization is completely successful, otherwise -1.
  */
 int jobs_fini(void) {
-    for (int i = 0; i < MAX_JOBS; i++) {
-        
-    }
+    return 0;
 }
 
 /**
@@ -101,14 +100,22 @@ int jobs_fini(void) {
  */
 int jobs_show(FILE *file) {
     for (int i = 0; i < MAX_JOBS; i++) {
-        fprintf(file, jobs[i].jobid);
-        fprintf(file, "\t");
-        fprintf(file, jobs[i].pgid);
-        fprintf(file, "\t");
-        fprintf(file, jobs[i].status);
-        fprintf(file, "\t");
-        fprintf(file, jobs[i].pipeline);
-        fprintf(file, "\n");
+        if (jobs[i]->pipeline != NULL) {
+            fprintf(file, "%d", jobs[i]->jobid);
+            fprintf(file, "\t");
+            fprintf(file, "%d", jobs[i]->pgid);
+            fprintf(file, "\t");
+            switch(jobs[i]->status) {
+                case new: fprintf(file, "NEW"); break;
+                case running: fprintf(file, "RUNNING"); break;
+                case completed: fprintf(file, "COMPLETED"); break;
+                case aborted: fprintf(file, "ABORTED"); break;
+                case canceled: fprintf(file, "CANCELED"); break;
+            }
+            fprintf(file, "\t");
+            show_pipeline(file, jobs[i]->pipeline);
+            fprintf(file, "\n");
+        }
     }
     return 0;
 }
@@ -147,7 +154,89 @@ int jobs_show(FILE *file) {
  * value returned is the job ID assigned to the pipeline.
  */
 int jobs_run(PIPELINE *pline) {
-    // TO BE IMPLEMENTED
+    //create a new job
+    job *newJob;
+    for (int i = 0; i < MAX_JOBS; i++ ) {
+        if (jobs[i]->status == new) {
+            newJob = jobs[i];
+            break;
+        } else { if(i == MAX_JOBS) {return -1;} }
+    }
+
+    //Fork main process
+    int leader = fork();
+
+    if (leader > 0) {
+        newJob->jobid = getpid();
+        newJob->pgid = getpid();
+        newJob->status = running;
+        newJob->pipeline = copy_pipeline(pline);
+    }
+ 
+    if (leader == -1) {
+        fprintf(stderr, "Main process failed to fork.");
+        return -1;
+    } else if (leader == 0) {
+        //in the child of main process (leader)
+        if (setpgid(leader, getpid()) == -1) {
+            fprintf(stderr, "Failed to set process group ID for leader.");
+            return -1;
+        }
+
+        //loop through command list, fork each time per command
+        COMMAND *cmd = pline->commands;
+        while (cmd != NULL) {
+            int child = fork();
+            if (child == -1) { fprintf(stderr, "Leader failed to fork."); return -1; }
+            else if (child == 0) {
+                //in the child process of leader
+                if (setpgid(child, getpid()) == -1) { fprintf(stderr, "Failed to set process group ID for child."); return -1; }
+
+                //get size of args list to make string array representation of args list to call execvp
+                int size = 0;
+                ARG *arg = cmd->args;
+                while (arg) { size++; arg = arg->next; }
+
+                //add all string reps of args to string array
+                char* charArr[size+1];
+                int i = 0;
+                arg = cmd->args;
+                while (i < size) { 
+                    charArr[i] = eval_to_string(arg->expr); 
+                    arg = arg->next; 
+                    i++; 
+                }
+                charArr[size] = '\0';
+
+                if(cmd != NULL) {
+                    int fd[2];
+                    if (cmd->next == NULL) {
+                        if (pline->capture_output != 0) {
+                            if (pipe(fd) == -1)  { fprintf(stderr, "Pipe failed to open."); return -1; }
+                            if(execvp(cmd->args->expr->members.value, charArr) == -1) { fprintf(stderr, "Process didn't terminate properly."); return -1; }
+                        } else if (pline->output_file != NULL || pline->capture_output != 0) { 
+                            if(execvp(cmd->args->expr->members.value, charArr) == -1) { fprintf(stderr, "Process didn't terminate properly."); return -1; }
+                        } else { if(execvp(cmd->args->expr->members.value, charArr) == -1) { fprintf(stderr, "Process didn't terminate properly."); return -1; } }
+                    }
+                    if(pline -> input_file != NULL) {
+                        if(pipe(fd) == -1) {fprintf(stderr, "Failed to open pipe."); return -1;}
+                        if(execvp(cmd->args->expr->members.value, charArr) == -1){fprintf(stderr,"Process didn't terminate properly\n"); return -1;}
+                    }
+                    close(fd[0]);
+                    close(fd[1]);  
+                }     
+            } else {/* in the leader process */
+                // close(fd[0]);
+                // close(fd[1]);
+                // int exitStatus;
+                // pid_t pid = waitpid(child, &exitStatus, 0);
+                // if (pid == child && WIFEXITED(exitStatus)) { return WEXITSTATUS(exitStatus); }
+                // else return -1;
+                while (wait(NULL) > 0);
+            }
+            cmd = cmd->next;
+        } 
+    } else { /* in the main process */ }
     return 0;
 }
 
@@ -162,8 +251,15 @@ int jobs_run(PIPELINE *pline) {
  * or -1 if any error occurs that makes it impossible to wait for the specified job.
  */
 int jobs_wait(int jobid) {
-    // TO BE IMPLEMENTED
-    return 0;
+    job *waitNode;
+    for (int i = 0; i < MAX_JOBS; i++) { 
+        if (jobid == jobs[i]->jobid)  { waitNode = jobs[i]; break;}  
+        if (i == MAX_JOBS) {return -1;}
+    }
+    int exitStatus;
+    pid_t pid = waitpid(waitNode->jobid, &exitStatus, 0);
+    if (pid == waitNode->jobid && WIFEXITED(exitStatus)) { return WEXITSTATUS(exitStatus); }
+    else return -1;
 }
 
 /**
@@ -177,8 +273,18 @@ int jobs_wait(int jobid) {
  * has terminated, or -1 if the job has not yet terminated or if any other error occurs.
  */
 int jobs_poll(int jobid) {
-    // TO BE IMPLEMENTED
-    return 0;
+    job *pollNode;
+    for (int i = 0; i < MAX_JOBS; i++) {
+         if (jobid == jobs[i]->jobid)  { 
+             pollNode = jobs[i]; 
+             break;
+        } 
+        if (i == MAX_JOBS) {return -1;}
+    }
+    int exitStatus;
+    pid_t pid = waitpid(pollNode->jobid, &exitStatus, WNOHANG);
+    if (pid == pollNode->jobid && WIFEXITED(exitStatus)) { return WEXITSTATUS(exitStatus); }
+    else return -1;
 }
 
 /**
@@ -194,8 +300,16 @@ int jobs_poll(int jobid) {
  * @return  0 if the job was successfully expunged, -1 if the job could not be expunged.
  */
 int jobs_expunge(int jobid) {
-    // TO BE IMPLEMENTED
-    return 0;
+    job *expungeNode;
+    for (int i = 0; i < MAX_JOBS; i++) { if (jobid == jobs[i]->jobid)  { expungeNode = jobs[i]; break; } }
+    if (expungeNode->status == canceled || expungeNode->status == aborted || expungeNode->status == completed) {
+        free_pipeline(expungeNode->pipeline);
+        expungeNode->jobid = 0;
+        expungeNode->pgid = 0;
+        expungeNode->status = new;
+        expungeNode->pipeline = NULL;
+        return 0;
+    } else return -1;
 }
 
 /**
@@ -216,8 +330,25 @@ int jobs_expunge(int jobid) {
  * error occurred.
  */
 int jobs_cancel(int jobid) {
-    // TO BE IMPLEMENTED
-    return 0;
+    job *cancelNode;
+    for (int i = 0; i < MAX_JOBS; i++) { if (jobid == jobs[i]->jobid)  { cancelNode = jobs[i]; break; } if (i == MAX_JOBS) {return -1;}}
+    int leaderNodeID = getpgid(cancelNode->jobid);
+    job* leaderNode;
+    for (int i = 0; i < MAX_JOBS; i++) { if (leaderNodeID == jobs[i]->jobid)  { leaderNode = jobs[i]; break; } if (i == MAX_JOBS) {return -1;}}
+    kill(cancelNode->jobid, SIGKILL);
+    int exitStatus;
+    pid_t pid = waitpid(cancelNode->jobid, &exitStatus, 0);
+    if (pid == cancelNode->jobid && WIFEXITED(exitStatus)) { 
+        if (leaderNode->status == completed) {
+            cancelNode->status = canceled;
+            return 0;
+        } else {
+            cancelNode->status = aborted;
+            return -1;
+        }
+    }
+    else return -1;
+    
 }
 
 /**
@@ -244,6 +375,10 @@ char *jobs_get_output(int jobid) {
  * @return -1 if any error occurred, 0 otherwise.
  */
 int jobs_pause(void) {
-    // TO BE IMPLEMENTED
+    // sigset_t sig;
+    // sigfillset(&sig);
+    // sigdelset(&sig, SIGINT);
+    // sigdelset(&sig, SIGI0);
+    // sigdelset(&sig, SIGCHILD);
     return 0;
 }

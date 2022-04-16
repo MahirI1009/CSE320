@@ -5,7 +5,7 @@
 #include "debug.h"
 
 typedef struct node {
-    STMT stmt;
+    STMT *stmt;
     struct node *next;
 }node;
 
@@ -13,7 +13,6 @@ node *head;
 
 int pCtr = -1;
 int listExists = 0;
-STMT stmt;
 
 void makelist() {
     listExists = 1;
@@ -47,7 +46,7 @@ int prog_list(FILE *out) {
 
     node *curr = head->next;
     while (curr != NULL) { 
-        show_stmt(out, &(curr->stmt));
+        show_stmt(out, curr->stmt);
         curr = curr->next;
     }
     return 0;
@@ -76,7 +75,7 @@ int prog_insert(STMT *stmt) {
     //insert to front of list
     if (head->next == NULL) {
         node *newStmt = malloc(sizeof(node));
-        newStmt->stmt = *stmt;
+        newStmt->stmt = stmt;
         newStmt->next = NULL;
         head->next = newStmt;
         return 0;
@@ -85,17 +84,17 @@ int prog_insert(STMT *stmt) {
     //go through linkedlist to find a place to insert node
     while (curr != NULL) {
         //insert a new node
-        if (stmt->lineno < curr->stmt.lineno) {
+        if (stmt->lineno < curr->stmt->lineno) {
             node *newStmt = malloc(sizeof(node));
-            newStmt->stmt = *stmt;
+            newStmt->stmt = stmt;
             newStmt->next = curr;
             prev->next = newStmt;
             return 0;
         }
         //replace a node with the same line #
-        if (stmt->lineno == curr->stmt.lineno) {
-            free_stmt(&(curr->stmt));
-            curr->stmt = *stmt;
+        if (stmt->lineno == curr->stmt->lineno) {
+            free_stmt(curr->stmt);
+            curr->stmt = stmt;
             return 0;
         }
         prev = curr;
@@ -104,7 +103,7 @@ int prog_insert(STMT *stmt) {
     //insert at end of list
     if (curr == NULL) {
         node *newStmt = malloc(sizeof(node));
-        newStmt->stmt = *stmt;
+        newStmt->stmt = stmt;
         newStmt->next = NULL;
         prev->next = newStmt;
     }
@@ -129,6 +128,7 @@ int prog_insert(STMT *stmt) {
  * @param max  Upper end of the range of line numbers to be deleted.
  */
 int prog_delete(int min, int max) {
+    if(min > max) {return -1;}
     if (listExists == 0) {makelist();}
     if (head == NULL) {return -1;}
     
@@ -137,12 +137,12 @@ int prog_delete(int min, int max) {
     if (curr == NULL || next == NULL) {return -1;}
 
     while (curr != NULL && next != NULL) {
-        if (next->stmt.lineno >= min && next->stmt.lineno <= max) {
+        if (next->stmt->lineno >= min && next->stmt->lineno <= max) {
             node* del = next;
             next = del->next;
             curr->next = next;
             free(del);
-        } else if (curr->stmt.lineno > max) {return 0;}
+        } else if (curr->stmt->lineno > max) {return 0;}
         else {
             curr = curr->next;
             next = curr->next;
@@ -158,7 +158,7 @@ int prog_delete(int min, int max) {
  */
 void prog_reset(void) { 
     node* curr = head->next;
-    if (curr != NULL) { pCtr = (curr->stmt.lineno) - 1; }
+    if (curr != NULL) { pCtr = - 1; }
 }
 
 /**
@@ -178,9 +178,12 @@ STMT *prog_fetch(void) {
 
     node *curr = head->next;
     while (curr != NULL) { 
-        if (curr->stmt.lineno == pCtr) { 
-            stmt = curr->next->stmt;
-            return &stmt;
+        if (curr->stmt->lineno > pCtr) {
+            return curr->stmt;
+        }
+        if (curr->stmt->lineno == pCtr) {
+            if (curr->next != NULL) { return curr->next->stmt; } 
+            else return NULL;
         } 
         curr = curr->next;
     }
@@ -201,13 +204,13 @@ STMT *prog_fetch(void) {
 STMT *prog_next() {
     if (listExists == 0) {makelist();}
     if (head == NULL) {return NULL;}
-
+    STMT *stmt;
     node *curr = head->next;
     while (curr != NULL) { 
-        if (curr->stmt.lineno == pCtr) { 
-            pCtr = curr->next->stmt.lineno;
+        if (curr->stmt->lineno == pCtr) { 
+            pCtr = curr->next->stmt->lineno;
             stmt = curr->next->stmt;
-            return &stmt;
+            return stmt;
         }
         curr = curr->next;
     }
@@ -232,13 +235,13 @@ STMT *prog_next() {
 STMT *prog_goto(int lineno) {
     if (listExists == 0) {makelist();}
     if (head == NULL) {return NULL;}
-
+    STMT *stmt;
     node *curr = head->next;
     while (curr != NULL && curr->next != NULL) { 
-        if (lineno == curr->next->stmt.lineno) {
-            lineno = curr->stmt.lineno;
+        if (lineno == curr->next->stmt->lineno) {
+            lineno = curr->stmt->lineno;
             stmt = curr->stmt;
-            return &stmt;
+            return stmt;
         }
         curr = curr->next;
     }
