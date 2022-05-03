@@ -4,7 +4,13 @@
 #include "pbx.h"
 #include "server.h"
 #include "debug.h"
+#include "csapp.h"
+#include "csapp.c"
+#include "netdb.h"
+#include "netinet/in.h"
 
+static void sighup_handler(int sig);
+static void *thread(void *vargp);
 static void terminate(int status);
 
 /*
@@ -27,10 +33,46 @@ int main(int argc, char* argv[]){
     // a SIGHUP handler, so that receipt of SIGHUP will perform a clean
     // shutdown of the server.
 
-    fprintf(stderr, "You have to finish implementing main() "
-	    "before the PBX server will function.\n");
+    // int option, port;
+    // while((option = getopt(argc, argv, ":pn")) != -1) {
+    //     switch(option) {
+    //         case 'p':
+    //         case 'n':
+    //             port = option;
+    //             break;
+    //         case ':':
+    //             fprintf(stderr, "usage: %s <port>\n", argv[0]);
+    //             exit(0);
+    //         case '?':
+    //             fprintf(stderr, "usage: %s <port>\n", argv[0]);
+    //             exit(0);
+    //     } 
+    // }
 
-    terminate(EXIT_FAILURE);
+    int port = atoi(argv[2]);
+    
+    int listenfd, *connfd;
+    struct sigaction act;
+    act.sa_handler = &sighup_handler;
+    sigaction(SIGHUP, &act, NULL);
+    listenfd = open_listenfd(port);
+    pthread_t tid;
+    while(1) {
+        connfd = malloc(sizeof(int));
+        *connfd = accept(listenfd, NULL, NULL);
+        Pthread_create(&tid, NULL, thread, connfd);
+    }
+}
+
+void sighup_handler(int sig) { terminate(SIGHUP); }
+
+void *thread(void *vargp) {
+    int connfd = *((int *)vargp);
+    Pthread_detach(pthread_self());
+    pbx_client_service(vargp);
+    Free(vargp);
+    Close(connfd);
+    return NULL;
 }
 
 /*
