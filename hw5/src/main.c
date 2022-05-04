@@ -60,20 +60,11 @@ int main(int argc, char* argv[]){
     while(1) {
         connfd = malloc(sizeof(int));
         *connfd = accept(listenfd, NULL, NULL);
-        Pthread_create(&tid, NULL, thread, connfd);
+        Pthread_create(&tid, NULL, pbx_client_service, connfd);
     }
 }
 
 void sighup_handler(int sig) { terminate(SIGHUP); }
-
-void *thread(void *vargp) {
-    int connfd = *((int *)vargp);
-    Pthread_detach(pthread_self());
-    pbx_client_service(vargp);
-    Free(vargp);
-    Close(connfd);
-    return NULL;
-}
 
 /*
  * Function called to cleanly shut down the server.
