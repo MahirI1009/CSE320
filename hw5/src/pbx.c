@@ -5,18 +5,35 @@
 
 #include "pbx.h"
 #include "debug.h"
+ #include <sys/socket.h>
+#include <semaphore.h>
+
+// - maintain registry of connected clients
+// - manage tu objs associated w clients
+// - map each ext to associated tu obj
+// - provide appropriate sync using semaphores
+// - shutdown network connections to all registered clients using shutdown(2)
+// - wait for all client service threads to unregister tus before returning
 
 /*
  * Initialize a new PBX.
  *
  * @return the newly initialized PBX, or NULL if initialization fails.
  */
-#if 0
+
+typedef struct pbx {
+    TU *tus[PBX_MAX_EXTENSIONS];
+    sem_t mutex;
+}PBX;
+
+
 PBX *pbx_init() {
-    // TO BE IMPLEMENTED
-    abort();
+    PBX *pbx;
+    pbx = malloc(sizeof(struct pbx));
+    for (int i = 0; i < PBX_MAX_EXTENSIONS; i++) { pbx->tus[i] = NULL; }
+    sem_init(&pbx->mutex, 0, 1);
+    return pbx;
 }
-#endif
 
 /*
  * Shut down a pbx, shutting down all network connections, waiting for all server
@@ -28,12 +45,18 @@ PBX *pbx_init() {
  *
  * @param pbx  The PBX to be shut down.
  */
-#if 0
+
 void pbx_shutdown(PBX *pbx) {
-    // TO BE IMPLEMENTED
-    abort();
+    sem_wait(&pbx->mutex);
+    for (int i = 0; i < PBX_MAX_EXTENSIONS; i++) {
+        if(pbx->tus[i] != NULL) {
+            shutdown(tu_fileno(pbx->tus[i]), SHUT_RDWR);
+            pbx_unregister(pbx, pbx->tus[i]);
+        }
+    }
+    sem_post(&pbx->mutex);
+    free(pbx);
 }
-#endif
 
 /*
  * Register a telephone unit with a PBX at a specified extension number.
@@ -49,12 +72,21 @@ void pbx_shutdown(PBX *pbx) {
  * @param ext  The extension number on which the TU is to be registered.
  * @return 0 if registration succeeds, otherwise -1.
  */
-#if 0
+
 int pbx_register(PBX *pbx, TU *tu, int ext) {
-    // TO BE IMPLEMENTED
-    abort();
+    sem_wait(&pbx->mutex);
+    for (int i = 0; i < PBX_MAX_EXTENSIONS; i++) {
+        if (pbx->tus[i] == NULL) {
+            pbx->tus[i] = tu;
+            tu_set_extension(tu, ext);
+            tu_ref(tu, "Registered the TU");
+            sem_post(&pbx->mutex);
+            return 0;
+        }
+    }
+    sem_post(&pbx->mutex);
+    return -1;
 }
-#endif
 
 /*
  * Unregister a TU from a PBX.
@@ -68,12 +100,21 @@ int pbx_register(PBX *pbx, TU *tu, int ext) {
  * @param tu  The TU to be unregistered.
  * @return 0 if unregistration succeeds, otherwise -1.
  */
-#if 0
+
 int pbx_unregister(PBX *pbx, TU *tu) {
-    // TO BE IMPLEMENTED
-    abort();
+    sem_wait(&pbx->mutex);
+    for (int i = 0; i < PBX_MAX_EXTENSIONS; i++) {
+        if (pbx->tus[i] == tu) {
+            pbx->tus[i] = NULL;
+            tu_hangup(tu);
+            tu_unref(tu, "Unregistered the TU.");
+            sem_post(&pbx->mutex);
+            return 0;
+        }
+    }
+    sem_post(&pbx->mutex);
+    return -1;
 }
-#endif
 
 /*
  * Use the PBX to initiate a call from a specified TU to a specified extension.
@@ -83,9 +124,17 @@ int pbx_unregister(PBX *pbx, TU *tu) {
  * @param ext  The extension number to be called.
  * @return 0 if dialing succeeds, otherwise -1.
  */
-#if 0
+
 int pbx_dial(PBX *pbx, TU *tu, int ext) {
-    // TO BE IMPLEMENTED
-    abort();
+    sem_wait(&pbx->mutex);
+    for (int i = 0; i < PBX_MAX_EXTENSIONS; i++) {
+        if (tu_extension(pbx->tus[i]) == ext) {
+            tu_dial(tu, pbx->tus[i]);
+            sem_post(&pbx->mutex);
+            return 0;
+        }
+    }
+    sem_post(&pbx->mutex);
+    return -1;
 }
-#endif
+
