@@ -47,10 +47,11 @@ void *pbx_client_service(void *arg) {
         ogstr = realloc(ogstr, j+1);
         ogstr[i+1] = '\0';
         str2 = strtok_r(ogstr, " ", &ogstr);
-        if (strcmp(str2, "pickup\r") == 0) { tu_pickup(tu); }
-        if (strcmp(str2, "hangup\r") == 0) { tu_hangup(tu); }
-        if (strcmp(str2, "chat") == 0) { tu_chat(tu, ogstr); }
+        if (strcmp(str2, "pickup\r") == 0) { debug("%s", "Reached pickup"); tu_pickup(tu); }
+        if (strcmp(str2, "hangup\r") == 0) { debug("%s", "Reached hangup"); tu_hangup(tu); }
+        if (strcmp(str2, "chat") == 0) { debug("%s", "Reached chat"); tu_chat(tu, ogstr); }
         if (strcmp(str2, "dial") == 0) {
+            debug("%s", "Reached dial");
             str2 = strtok_r(ogstr, "\r", &ogstr);
             pbx_dial(pbx, tu, atoi(str2));
         }

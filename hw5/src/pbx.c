@@ -5,7 +5,7 @@
 
 #include "pbx.h"
 #include "debug.h"
- #include <sys/socket.h>
+#include <sys/socket.h>
 #include <semaphore.h>
 
 // - maintain registry of connected clients
@@ -32,6 +32,7 @@ PBX *pbx_init() {
     pbx = malloc(sizeof(struct pbx));
     for (int i = 0; i < PBX_MAX_EXTENSIONS; i++) { pbx->tus[i] = NULL; }
     sem_init(&pbx->mutex, 0, 1);
+    debug("%s", "Initialized TU");
     return pbx;
 }
 
@@ -130,6 +131,7 @@ int pbx_dial(PBX *pbx, TU *tu, int ext) {
     for (int i = 0; i < PBX_MAX_EXTENSIONS; i++) {
         if (tu_extension(pbx->tus[i]) == ext) {
             tu_dial(tu, pbx->tus[i]);
+            debug("%s %d", "Dialing TU #", ext);
             sem_post(&pbx->mutex);
             return 0;
         }
