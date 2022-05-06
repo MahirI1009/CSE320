@@ -33,22 +33,6 @@ int main(int argc, char* argv[]){
     // a SIGHUP handler, so that receipt of SIGHUP will perform a clean
     // shutdown of the server.
 
-    // int option, port;
-    // while((option = getopt(argc, argv, ":pn")) != -1) {
-    //     switch(option) {
-    //         case 'p':
-    //         case 'n':
-    //             port = option;
-    //             break;
-    //         case ':':
-    //             fprintf(stderr, "usage: %s <port>\n", argv[0]);
-    //             exit(0);
-    //         case '?':
-    //             fprintf(stderr, "usage: %s <port>\n", argv[0]);
-    //             exit(0);
-    //     } 
-    // }
-
     int port = atoi(argv[2]);
     
     int listenfd, *connfd;
