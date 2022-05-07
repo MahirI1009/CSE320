@@ -5,7 +5,6 @@
 #include "server.h"
 #include "debug.h"
 #include "csapp.h"
-#include "csapp.c"
 #include "netdb.h"
 #include "netinet/in.h"
 
