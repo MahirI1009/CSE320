@@ -39,6 +39,7 @@ void *pbx_client_service(void *arg) {
         ogstr[i] = c;
         c  = fgetc(file);
         while (c != '\n') {
+            if (c == EOF) break;
             i++; j++;
             ogstr = realloc(ogstr, j);
             ogstr[i] = c;
