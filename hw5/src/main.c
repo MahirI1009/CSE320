@@ -23,6 +23,10 @@ int main(int argc, char* argv[]){
     // Option '-p <port>' is required in order to specify the port number
     // on which the server should listen.
 
+    if (argc < 3) { exit(0); }
+    if (strcmp(argv[1], "-p") != 0) { exit(0); }
+    int port = atoi(argv[2]);
+
     // Perform required initialization of the PBX module.
     debug("Initializing PBX...");
     pbx = pbx_init();
@@ -33,7 +37,6 @@ int main(int argc, char* argv[]){
     // a SIGHUP handler, so that receipt of SIGHUP will perform a clean
     // shutdown of the server.
 
-    int port = atoi(argv[2]);
     
     int listenfd, *connfd;
     struct sigaction act;
@@ -46,6 +49,7 @@ int main(int argc, char* argv[]){
         *connfd = accept(listenfd, NULL, NULL);
         Pthread_create(&tid, NULL, pbx_client_service, connfd);
     }
+    close(listenfd);
 }
 
 void sighup_handler(int sig) { terminate(SIGHUP); }
