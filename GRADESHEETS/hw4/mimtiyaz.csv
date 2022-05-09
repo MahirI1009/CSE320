@@ -1,0 +1,55 @@
+Graded Commit:3e0692a05855cd031b61e9e77b0ce930eeebce78
+
+TEST NAME, POINTS,OUT OF
+basecode_suite/mush_eof_test,1,1,
+blackbox_suite/source_file,0,1,The test timed out.: None
+blackbox_suite/valgrind_complex,0,1,1 assertion(s) failed.: tests/blackbox_tests.c:37: Fork bombed. Killed.
+blackbox_suite/valgrind_simple,0,1,1 assertion(s) failed.: tests/blackbox_tests.c:20: Fork bombed. Killed.
+jobs_suite/cancel_invalid,0,1,The test crashed.: None
+jobs_suite/cancel_terminated_job,0,1,The test timed out.: None
+jobs_suite/capture_long_output,0,1,The test timed out.: None
+jobs_suite/get_output_invalid,0,1,The test timed out.: None
+jobs_suite/input_redirection,0,1,The test timed out.: None
+jobs_suite/output_redirection,0,1,The test timed out.: None
+jobs_suite/poll_invalid,0,1,The test crashed.: None
+jobs_suite/run_background,0,1,The test timed out.: None
+jobs_suite/run_pipeline,0,1,The test timed out.: None
+jobs_suite/simple_cancel,0,1,The test crashed.: None
+jobs_suite/simple_expunge,0,1,The test timed out.: None
+jobs_suite/simple_get_output,0,1,The test timed out.: None
+jobs_suite/simple_pause,1,1,
+jobs_suite/simple_run,0,1,The test timed out.: None
+jobs_suite/simple_show,1,1,
+jobs_suite/wait_and_poll,0,1,The test timed out.: None
+jobs_suite/wait_expunged_job,0,1,The test timed out.: None
+jobs_suite/wait_invalid_job,0,1,The test crashed.: None
+program_suite/prog_delete_after_pc,1,1,
+program_suite/prog_delete_all,1,1,
+program_suite/prog_delete_at_pc,1,1,
+program_suite/prog_delete_before_pc,1,1,
+program_suite/prog_fetch,0,1,1 assertion(s) failed.: tests/__grading_helpers.c:53: Failed to get expected value. Got: 94423848178080 | Expected: 94423848177984.
+program_suite/prog_fetch_beyond,1,1,
+program_suite/prog_fetch_empty,1,1,
+program_suite/prog_goto_invalid,1,1,
+program_suite/prog_goto_valid,0,1,1 assertion(s) failed.: tests/__grading_helpers.c:53: Failed to get expected value. Got: 94677158973760 | Expected: 94677158973856.
+program_suite/prog_insert_beginning,1,1,
+program_suite/prog_insert_end,1,1,
+program_suite/prog_insert_middle,1,1,
+program_suite/prog_insert_replace,1,1,
+program_suite/prog_list,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:121: Output string did not match expected string. Got:       1	run
+              2	list
+         | Expected:       1	run
+        -->
+              2	list"
+program_suite/prog_next_empty,1,1,
+program_suite/prog_reset_fetch,1,1,
+store_suite/store_get_int_from_string,1,1,
+store_suite/store_get_int_invalid,0,1,1 assertion(s) failed.: tests/__grading_helpers.c:88: Program exited with 0 instead of -1
+store_suite/store_get_int_non_exist,1,1,
+store_suite/store_get_string_non_exist,1,1,
+store_suite/store_set_int_new,1,1,
+store_suite/store_set_int_replace,1,1,
+store_suite/store_set_string_delete,0,1,The test crashed.: None
+store_suite/store_set_string_new,1,1,
+store_suite/store_set_string_replace,1,1,
+total,23,47
