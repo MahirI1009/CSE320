@@ -1,0 +1,87 @@
+Graded Commit:34911431fbfb9518aee7b1fab76c36cf9168c359
+
+TEST NAME, POINTS,OUT OF
+TU_suite/tu_chat_basic,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:121: TU1 message, Output string did not match expected string. Got: ON HOOK 400
+        ON HOOK
+        DIAL TONE
+        RING BACK
+        CONNECTED
+        Hello 500
+         | Expected: ON HOOK 400
+
+        DIAL TONE
+
+        RING BACK
+
+        CONNECTED 500
+
+        CONNECTED 500
+
+        CHAT Hello 400"
+TU_suite/tu_chat_invalid,1,1,
+TU_suite/tu_dial_basic,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:121: TU1 message, Output string did not match expected string. Got: ON HOOK 400
+        ON HOOK
+        DIAL TONE
+        RING BACK
+        ON HOOK 400
+         | Expected: ON HOOK 400
+
+        DIAL TONE
+
+        RING BACK
+
+        CONNECTED 500
+
+        ON HOOK 400"
+TU_suite/tu_dial_deadlock,0,1,The test timed out.: None
+TU_suite/tu_dial_off_hook,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:121: TU1 message, Output string did not match expected string. Got: ON HOOK 400
+        ON HOOK
+        DIAL TONE
+        BUSY SIGNAL
+        RING BACK
+         | Expected: ON HOOK 400
+
+        DIAL TONE
+
+        BUSY SIGNAL"
+TU_suite/tu_extension,1,1,
+TU_suite/tu_fileno,1,1,
+TU_suite/tu_init,1,1,
+TU_suite/tu_pickup_basic,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:121: TU message, Output string did not match expected string. Got: ON HOOK 400
+        ON HOOK
+        DIAL TONE
+         | Expected: ON HOOK 400
+
+        DIAL TONE"
+TU_suite/tu_pickup_repeat,1,1,
+TU_suite/tu_ref_stress,1,1,
+TU_suite/tu_self_dial,0,1,"1 assertion(s) failed.: tests/__grading_helpers.c:121: TU1 message, Output string did not match expected string. Got: ON HOOK 400
+        ON HOOK
+        DIAL TONE
+        BUSY SIGNAL
+         | Expected: ON HOOK 400
+
+        DIAL TONE
+
+        BUSY SIGNAL"
+blackbox_suite/connect_disconnect2_test,1,1,
+blackbox_suite/connect_disconnect2_valgrind_test,1,1,
+blackbox_suite/connect_disconnect_many_test,0,1,1 assertion(s) failed.: tests/blackbox_tests.c:90: ***Server terminated ungracefully with signal 9
+blackbox_suite/connect_disconnect_many_valgrind_test,0,1,1 assertion(s) failed.: tests/blackbox_tests.c:133: ***Server terminated ungracefully with signal 9
+blackbox_suite/connect_disconnect_test,1,1,
+blackbox_suite/connect_disconnect_valgrind_test,1,1,
+blackbox_suite/dial_answer_test,1,1,
+blackbox_suite/dial_bad_test,0,1,"1 assertion(s) failed.: tests/blackbox_tests.c:487: expected 0, was -1"
+blackbox_suite/dial_disconnect_test,1,1,
+blackbox_suite/dial_good_test,1,1,
+blackbox_suite/dial_self_test,0,1,"1 assertion(s) failed.: tests/blackbox_tests.c:462: expected 0, was -1"
+blackbox_suite/exercise_test,0,1,"1 assertion(s) failed.: tests/blackbox_tests.c:608: expected 0, was -1"
+blackbox_suite/exercise_valgrind_test,0,1,"1 assertion(s) failed.: tests/blackbox_tests.c:698: expected 0, was -1"
+blackbox_suite/open_connection_test,0,1,1 assertion(s) failed.: tests/blackbox_tests.c:90: ***Server terminated ungracefully with signal 9
+blackbox_suite/open_connection_valgrind_test,0,1,1 assertion(s) failed.: tests/blackbox_tests.c:133: ***Server terminated ungracefully with signal 9
+blackbox_suite/pickup_hangup2_test,1,1,
+blackbox_suite/pickup_hangup_test,1,1,
+pbx_suite/dial_two_threads,1,1,
+pbx_suite/many_threads_random_reg_unreg_premature,0,1,The test timed out.: None
+stress_suite/stress_test,0,1,1 assertion(s) failed.: tests/stress_tests.c:139: Tester pid 712060 exit status was not 0
+total,16,32
